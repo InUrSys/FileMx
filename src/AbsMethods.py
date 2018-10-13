@@ -11,10 +11,25 @@ import send2trash
     
     
 def createMainFolder():
-    pathOut = os.path.expanduser('~/File Mx') #Get path to user’s home directory 
+    pathOut = os.path.expanduser(os.path.join('~','File Mx'))#Get path to user’s home directory
     if not os.path.exists(pathOut):
         os.makedirs(pathOut)
     return pathOut
+
+def createFolder(path):
+    if not os.path.exists(path):
+        os.makedirs(path)
+
+def createSavedPaths(shelveDictInfo): #recieves the DictInfo of the directories created
+
+    paths = []
+    dictValues = list(shelveDictInfo.values())
+    for path in dictValues:
+        paths.append(path[0])
+
+    for path in paths:
+        createFolder(path)
+
 
 
 def getName(dictInfo, parent=None):
