@@ -24,6 +24,7 @@ class BuildTree(QDialog, Ui_Dialog):
         self.setRootObj()
         self.setModel()
         self.createSavedDirs()
+        self.setTreeModule()
         
         self.twTreeObj.clicked.connect(self.onTreeClick)
         self.twTreeObj.doubleClicked.connect(self.onDoubleClicked)
@@ -31,6 +32,13 @@ class BuildTree(QDialog, Ui_Dialog):
         self.pbRemove.clicked.connect(self.onRemoveClicked)
         self.tbClean.clicked.connect(self.setToNone)
         self.pbMake.clicked.connect(self.onMakeClicked)
+
+
+    def setTreeModule(self):
+        shelveFile = shelve.open('mainConfigs')
+        rootObject = shelveFile['mainRoot']
+        rootModel = TreeBuilder.TreeModel(rootObject)
+        self.twTreeObj.setModel(rootModel)
 
 
     def createSavedDirs(self):
