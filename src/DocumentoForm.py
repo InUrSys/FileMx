@@ -3,13 +3,17 @@ Created on 25/04/2018
 
 @author: chernomirdinmacuvele
 '''
-from PyQt5 import QtWidgets
-from PyQt5.QtGui import QIcon, QPixmap
-from PyQt5.QtWidgets import QGraphicsDropShadowEffect, QListWidgetItem
 
+from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtWidgets import QListWidgetItem
+from frm_settings import frm_setting_categoria as settings
+import sqlMagic
+import mixedModel
+import QT_msg
 from ExtraExtra import Generic_extra
 from ui_Documento import Ui_Form
 import os
+import FuncSQL
 from datetime import datetime
 from PyQt5.Qt import QDateEdit
 
@@ -149,7 +153,6 @@ class frm_Documento(Ui_Form, Generic_extra):
             name = self.name_Generator()
             self.LEName.setText(str(name))
     """
-    
 
         
     def configLwClickes(self):

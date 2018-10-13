@@ -27,8 +27,8 @@ if __name__ == '__main__':
     InternetThread.status.connect(InternetStatus)
     InternetThread.start()
     
-    form2Show = BuildTreeForm.BuildTree() #Whats missing build the folders from an already existem tree
-    form2Show.exec_()
+    #form2Show = BuildTreeForm.BuildTree() #Whats missing build the folders from an already existem tree
+    #form2Show.exec_()
     
     
     try:
