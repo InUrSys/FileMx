@@ -21,7 +21,7 @@ class Thread_Internet_Status(QThread):
         timeout = 1
         address = "8.8.8.8"
         rc = subprocess.call("ping -c 1 -W %d %s" % (timeout, address),
-                            shell=True, stdout=open('.test.txt','w'), 
+                            shell=True, stdout=open('.pingOut.txt','w'), 
                             stderr = subprocess.STDOUT)
         if rc == 0:
             #print("Yes Internet")

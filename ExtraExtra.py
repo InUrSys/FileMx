@@ -85,7 +85,7 @@ class Generic_extra(QDialog):
                     x,y,w,h = 0.3, 0.5, 29, 20 #For LandScape mode
                     pdf.image(imgFile,x,y,w,h)#x,y,w,h
                 else:
-                    pdf.add_page()
+                    pdf.add_page('p')
                     x,y,w,h = 0.5, 0.3, 20, 29
                     pdf.image(imgFile,x,y,w,h)#x,y,w,h
 
@@ -115,7 +115,7 @@ class Generic_extra(QDialog):
         """
     
     
-    def AddMetadata(self, lstPdfIn, cat=None):
+    def AddMetadata(self, lstPdfIn):
         lstNameOut= []
         if lstPdfIn != []:
             try:
@@ -126,13 +126,17 @@ class Generic_extra(QDialog):
                         info = 'N/A'
                     else:
                         info = self.PTEInfo.toPlainText()
-                        
+                    
+                    #Get last Method
+                    cod = 1
+                    
                     dictIn= {
-                            'cod':self.SBCod.text(),
-                            'doc_num':idx,
+                            'cod':str(cod),
+                            'doc_num':str(idx+1)+" Of "+str(len(lstPdfIn)),
                             'nome':Mx_name,
                             'data':datetime.today().date().isoformat(),
                             'horas':datetime.today().time().isoformat(),
+                            'treePath': self.CBToStore.currentText(),
                             'doc_type':self.CBType.currentText(),
                             'info':info,
                             'systemEncoding':os.sys.getfilesystemencoding(),
@@ -141,16 +145,17 @@ class Generic_extra(QDialog):
                     
                     trailer = PdfReader(pdf) #Open the pdf FIle
                     metadata = PdfDict(cod = dictIn['cod'],doc_num = dictIn['doc_num'], nome = dictIn['nome'], data = dictIn['data'], 
-                                       horas = dictIn['horas'], doc_type = dictIn['doc_type'], info = dictIn['info'], 
+                                       horas = dictIn['horas'], treePath=dictIn['treePath'], doc_type = dictIn['doc_type'], info = dictIn['info'], 
                                        systemEncoding = dictIn['systemEncoding'], os = dictIn['os'], numero = idx)#Dict where we gointo insert our metadata
                     trailer.Info.clear() #we clear the default data that the lib adds
                     trailer.Info.update(metadata)#We add our own Metadata
                     _, file = os.path.split(pdf)
-                    abs_path = self.getDirMx()
+                    abs_path = self.CBToStore.currentText()
                     if abs_path == None:
                         return False, None
                     else:
-                        file_path = self.return_path(abs_path, 'File_Mx', cat)
+                        cat =self.CBType.currentText()
+                        file_path = self.return_path(abs_path, cat)
                         #file_mx = file[:7] #separe the firts 6 char
                         file_name = self.extract_file_name(file) + ".pdf"
                         namePath = os.path.join(file_path, file_name)
@@ -189,10 +194,10 @@ class Generic_extra(QDialog):
         else:
             return False
 
-    def return_path(self, cwd=None, start=None, category=None):
+    def return_path(self, cwd=None, category=None):
         self.create_month_dict()
 
-        parent = os.path.join(cwd, start)
+        parent = cwd
         year = str(self.DEData.date().year())
         month = self.month_string.get(str(self.DEData.date().month()))
 

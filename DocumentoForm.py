@@ -15,7 +15,7 @@ from ui_Documento import Ui_Form
 import os
 import FuncSQL
 from datetime import datetime
-from PyQt5.Qt import QDateEdit
+from PyQt5.Qt import QDateEdit, QComboBox
 
 class frm_Documento(Ui_Form, Generic_extra):
     def __init__(self, dbcon=None):
@@ -35,14 +35,13 @@ class frm_Documento(Ui_Form, Generic_extra):
         #self.configCbModel()
         #self.setUpIcons()
         self.PBAdd.clicked.connect(self.addFilesToLst) #working 100%
-        self.PBRemove.clicked.connect(self.removeFileFromLst)
-        self.LWPaths.clicked.connect(self.clickedItem)
-        self.LWPaths.doubleClicked.connect(self.DoubleclickedItem)
-        #self.PBSave.clicked.connect(self.start_Save)
+        self.PBRemove.clicked.connect(self.removeFileFromLst) #working 100%
+        self.LWPaths.clicked.connect(self.clickedItem) #working 100%
+        self.LWPaths.doubleClicked.connect(self.DoubleclickedItem) #working 100%
+        self.PBSave.clicked.connect(self.start_Save)
         #self.settingsButton.clicked.connect(self.goToSettings)
-        #self.getLast()
         #self.isClosed=True
-        #self.PBClose.clicked.connect(self.ToClosed)
+        self.PBClose.clicked.connect(self.ToClosed) #working 100%
         #self.setUpEffects()
 
 
@@ -52,7 +51,7 @@ class frm_Documento(Ui_Form, Generic_extra):
 
 
     def setUpIcons(self):
-        self.settingsButton.setIcon(QIcon(QPixmap(os.path.join("res","settings.png"))))
+        self.settingsButton.setIcon(QIcon(QPixmap(os.path.join(os.getcwd(),"res","settings.png"))))
         # lst_wd = QListWidgetItem()
         # lst_wd.setText("File_Mx_1");
         # lst_wd.setIcon(QIcon(QPixmap(os.path.join("res", "Layer 1.png"))));
@@ -66,15 +65,6 @@ class frm_Documento(Ui_Form, Generic_extra):
             self.updateCbModel()
 
 
-    def getLast(self):
-        bOK, value = FuncSQL.getLast(tblName='docfile', val='cod', ordBy='cod')
-        if bOK:
-            self.SBCod.setValue(value+1)
-        else:
-            self.SBCod.setValue(0)
-        self.DEData.setDate(datetime.today())
-        
-    
     def start_Save(self):
         #=======================================================================
         # #Get the info from the widget
@@ -93,22 +83,23 @@ class frm_Documento(Ui_Form, Generic_extra):
     
     def saving_part2(self):
         bOK=None
-        category = self.CBType.currentText()
+        
+        self.CBType.addItems(["Factura"])
+        self.CBToStore.addItems(["/Users/chernomirdinmacuvele/File Mx/BIM/RH/Steban"])
 
-        pdfObj = self.FusionImg(lstImgFile=self.lstImg)
+        pdfObj = self.FusionImg(lstImgFile=self.lstImg) #working 100$
         if pdfObj is not None:
             for pdf_obj in pdfObj:
                 self.lstPdf.append(pdf_obj)
-
-        bOK, lstObjOut = self.AddMetadata(lstPdfIn=self.lstPdf, cat=category)
+        
+        bOK, lstObjOut = self.AddMetadata(lstPdfIn=self.lstPdf)
         if bOK==True:
-            self.saveToDatabase(lstObjOut=lstObjOut)
+            #self.saveToDatabase(lstObjOut=lstObjOut)
             QT_msg.Sucessos(txt='Ficheiro <b>MX</b> Criado com Sucesso')
             self.clearWdg()
         elif bOK==False:
             QT_msg.aviso(txt='Erro ao Criar Ficheiro <b>MX</b>!<p> Por favor tente novamente.')
-        
-    
+         
     
     def saveToDatabase(self, lstObjOut):
         strLst='lista: '
@@ -136,13 +127,13 @@ class frm_Documento(Ui_Form, Generic_extra):
             
         
     def clearWdg(self):
-        self.getLast()
+        #self.getLast()
         self.PTEInfo.clear()
         self.CBType.setCurrentIndex(0)
+        self.CBToStore.setCurrentIndex(0)
         self.lstImg.clear()
         self.lstPdf.clear()
-        self.LWPathsImg.clear()
-        self.LWPathsPdf.clear()
+        self.LWPaths.clear()
         
 
     """
@@ -170,10 +161,6 @@ class frm_Documento(Ui_Form, Generic_extra):
         isImg, fileOut = self.getFile()
         self.clkFilePath=None
 
-        fileName = os.path.basename(fileOut)
-        fileName = self.extra.extract_file_name(filename=fileName)
-        #add finame to the lineEdit
-        self.leNome.setText(fileName)
         if isImg == True:
             bOK = self.checkIfEqual(valIn=fileOut, OgLst=self.lstImg)
             if not bOK:
@@ -198,16 +185,14 @@ class frm_Documento(Ui_Form, Generic_extra):
         for file_path in self.lstImg:
             res = ''
             file_name_list = os.path.basename(file_path).split(".")
-
             if file_name_list[1].lower() == "jpg":
                 res = "jpg.png"
             elif file_name_list[1].lower() == "png":
                 res = "png.png"
-            self.LWPaths.addItem(QListWidgetItem(QIcon(os.path.join(os.getcwd(),"res", res)), file_name_list[0]))
+            self.LWPaths.addItem(QListWidgetItem(QIcon(os.path.join(os.getcwd(),"res", res)), file_path))
             
         for file_path in self.lstPdf:
-            file_name_list = os.path.basename(file_path).split(".")
-            self.LWPaths.addItem(QListWidgetItem(QIcon(os.path.join(os.getcwd(),"res", "pdf.png")), file_name_list[0]))
+            self.LWPaths.addItem(QListWidgetItem(QIcon(os.path.join(os.getcwd(),"res", "pdf.png")), file_path))
     
     
     def removeFileFromLst(self):
