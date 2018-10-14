@@ -50,8 +50,10 @@ class BuildTree(QDialog, Ui_Dialog):
 
         shelveFile = shelve.open(self.shelvPath)
         if(len(shelveFile.keys()) > 0):
+
             self.nodoRoot = shelveFile['mainRoot']
             self.dictInfo = shelveFile['mainDict']
+            self.nodoRoot = list(self.dictInfo.keys())[0]
             # rootModel = TreeBuilder.TreeModel(self.nodoRoot)
             # self.twTreeObj.setModel(rootModel)
             self.setModel()
@@ -99,11 +101,23 @@ class BuildTree(QDialog, Ui_Dialog):
     def onAddClicked(self):
         nameOut, ToStore = AbsMethods.getName(self.dictInfo) #Get name and if it is to store
         ParentNodoObj = self.getParentNodes() #get parent nodo object
+
+        dict_keys = list(self.dictInfo.keys())
+        dict_keys_names =[]
+
+        for key in dict_keys:
+            dict_keys_names.append(key.name())
+
+        index = dict_keys_names.index(ParentNodoObj.name())
+
+        ParentNodoObj = dict_keys[index]
+
         bOK, dirFolder = AbsMethods.setFolder(nameOut, ParentNodoObj, self.dictInfo) #adiconar folder ao directorio main
         if bOK:
             nodoObj = TreeBuilder.th0_Nodo(nameOut, ParentNodoObj)
             self.setDict(nodoObj, dirFolder, ToStore)
             self.setModel()
+            print("Hellow")
         else:
             #add msgBox here
             print("Nao sera possivel criar directorio porque o directorio ja e existente!")
