@@ -28,7 +28,7 @@ if __name__ == '__main__':
     InternetThread.status.connect(InternetStatus)
     InternetThread.start()
     
-    #BuildTreeForm.BuildTree() #Whats missing build the folders from an already existem tree
+    #form2Show = BuildTreeForm.BuildTree() #Whats missing build the folders from an already existem tree
     form2Show = DocumentoForm.frm_Documento()
     form2Show.exec_()
     

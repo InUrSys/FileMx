@@ -85,7 +85,7 @@ class Generic_extra(QDialog):
                     x,y,w,h = 0.3, 0.5, 29, 20 #For LandScape mode
                     pdf.image(imgFile,x,y,w,h)#x,y,w,h
                 else:
-                    pdf.add_page('p')
+                    pdf.add_page('P')
                     x,y,w,h = 0.5, 0.3, 20, 29
                     pdf.image(imgFile,x,y,w,h)#x,y,w,h
 

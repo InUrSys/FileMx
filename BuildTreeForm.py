@@ -40,7 +40,7 @@ class BuildTree(QDialog, Ui_Dialog):
         self.pbMake.clicked.connect(self.onMakeClicked)
 
     def chooseFolder(self):
-        path, _ = QFileDialog().getOpenFileName(self, "Select File", "","shelve(*.db, *.dat, *.bak)")
+        path, _ = QFileDialog().getOpenFileName(self, "Select File", ""," shelve (*.db *.dat *.bak), All Files (*)")
         self.shelvPath = path.split(".")[0]
         self.setTreeModule()
 
