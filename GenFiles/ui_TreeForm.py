@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/Users/chernomirdinmacuvele/Documents/workspace/File_MX_EE/UI/ui_TreeForm.ui'
+# Form implementation generated from reading ui file 'ui_TreeForm.ui'
 #
-# Created by: PyQt5 UI code generator 5.8.2
+# Created by: PyQt5 UI code generator 5.10.1
 #
 # WARNING! All changes made in this file will be lost!
 
