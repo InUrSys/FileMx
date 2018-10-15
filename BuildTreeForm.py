@@ -135,14 +135,15 @@ class BuildTree(QDialog, Ui_Dialog):
 
         ParentNodoObj = dict_keys[index]
 
-        bOK, dirFolder = AbsMethods.setFolder(nameOut, ParentNodoObj, self.dictInfo) #adiconar folder ao directorio main
-        if bOK:
-            nodoObj = TreeBuilder.th0_Nodo(nameOut, ParentNodoObj)
-            self.setDict(nodoObj, dirFolder, ToStore)
-            self.setModel()
-        else:
-            #add msgBox here
-            print("Nao sera possivel criar directorio porque o directorio ja e existente!")
+        if nameOut is not None:
+            bOK, dirFolder = AbsMethods.setFolder(nameOut, ParentNodoObj, self.dictInfo) #adiconar folder ao directorio main
+            if bOK:
+                nodoObj = TreeBuilder.th0_Nodo(nameOut, ParentNodoObj)
+                self.setDict(nodoObj, dirFolder, ToStore)
+                self.setModel()
+            else:
+                #add msgBox here
+                print("Nao sera possivel criar directorio porque o directorio ja e existente!")
     
     
     def onDoubleClicked(self, mdix):
