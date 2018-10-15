@@ -103,7 +103,7 @@
     </layout>
    </item>
    <item row="0" column="1" colspan="2">
-    <widget class="QLineEdit" name="LEPathJson_2"/>
+    <widget class="QLineEdit" name="LECompany"/>
    </item>
   </layout>
  </widget>

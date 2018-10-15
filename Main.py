@@ -8,6 +8,8 @@ import sys
 from InternetServices import Thread_Internet_Status
 import BuildTreeForm
 import DocumentoForm
+from MainForm import frm_Main
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
@@ -31,6 +33,8 @@ if __name__ == '__main__':
     form2Show = DocumentoForm.frm_Documento()
     form2Show.exec_()
     
+    #mainApp = frm_Main()
+    #mainApp.show()
     
     try:
         app.verbose_crash = True

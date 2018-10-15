@@ -65,10 +65,14 @@ class Generic_extra(QDialog):
             
     
     def name_Generator(self):
-        name = "File_MX"
-        date = str(self.DEData.date().year()) +'_'+ str(self.DEData.date().month()) +'_'+ str(self.DEData.date().day()) +'_'+  str(datetime.today().hour)  +'_'+  str(datetime.today().minute) +'_'+  str(datetime.today().second)
+        self.create_month_dict()
+        month = self.month_string.get(str(self.DEData.date().month()))
+        
+        name = "FileMX"
+        date = str(self.DEData.date().year()) +'_'+ month +'_'+ str(self.DEData.date().day())
+        tempo = str(datetime.today().hour)  +'_'+  str(datetime.today().minute) #+'_'+  str(datetime.today().second)
         doctype = mixedModel.getDataCombox(widg=self.CBType)
-        nameOut = name+date+doctype
+        nameOut = name+"__"+date+"__"+tempo+"__"+doctype+"__"
         return nameOut
     
     

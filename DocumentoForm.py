@@ -27,7 +27,7 @@ class frm_Documento(Ui_Form, Generic_extra):
         #self.dbcon=dbcon
 
         self.extra = Generic_extra()
-        self.setUpComboBox()
+        #self.setUpComboBox()
 
 
         self.shelvePath = None
@@ -48,44 +48,47 @@ class frm_Documento(Ui_Form, Generic_extra):
         self.PBClose.clicked.connect(self.ToClosed) #working 100%
         #self.setUpEffects()
 
-    def getShelvePath(self):
-        self.shelvePath = os.path.abspath("F:\Programas\MyProjects\Python_Projects\File_Mx_EE\mainConfig")
-
-
-    def setUpComboBox(self):
-        self.getShelvePath()
-        path = self.shelvePath
-        shelvFile = shelve.open(path);
-        folders = shelvFile['mainDict']
-        self.extractToWrite(folder = folders)
-
-        docTypes = shelvFile.get('docTypes', False)
-
-        if not docTypes:
-            doc_types = ['Factura', 'Recibo', 'Curriculum Vitae', 'Certificado', 'Imagens', 'Outros']
-            shelvFile['docTypes'] = doc_types
-
-        self.CBType.addItems(docTypes)
-
-        shelvFile.close()
-
-    def extractToWrite(self, folder = None):
-        #Gets all the writable folders
-        folders_to_write = []
-        values = list(folder.values())#Extracts all the values inside the mainDict in the shelveFile and gets Tupls (path, boolean)
-        for val in values:
-            if val[1]: #Checks the boolean to see if it is writable
-                folders_to_write.append(val[0])
-
-        folders_to_write = self.filterPahts(folders_to_write) #Filters the folder path to get only its name.
-        self.CBToStore.addItems(folders_to_write)
-
-    def filterPahts(self, collection = None):
-        filtered = []
-        for val in collection:
-            filtered.append(os.path.basename(val))
-
-        return filtered
+#===============================================================================
+#     def getShelvePath(self):
+#         self.shelvePath = os.path.abspath("F:\Programas\MyProjects\Python_Projects\File_Mx_EE\mainConfig")
+# 
+# 
+#     def setUpComboBox(self):
+#         self.getShelvePath()
+#         path = self.shelvePath
+#         shelvFile = shelve.open(path);
+#         folders = shelvFile['mainDict']
+#         self.extractToWrite(folder = folders)
+# 
+#         docTypes = shelvFile.get('docTypes', False)
+# 
+#         if not docTypes:
+#             doc_types = ['Factura', 'Recibo', 'Curriculum Vitae', 'Certificado', 'Imagens', 'Outros']
+#             shelvFile['docTypes'] = doc_types
+# 
+#         self.CBType.addItems(docTypes)
+# 
+#         shelvFile.close()
+#         
+# 
+#     def extractToWrite(self, folder = None):
+#         #Gets all the writable folders
+#         folders_to_write = []
+#         values = list(folder.values())#Extracts all the values inside the mainDict in the shelveFile and gets Tupls (path, boolean)
+#         for val in values:
+#             if val[1]: #Checks the boolean to see if it is writable
+#                 folders_to_write.append(val[0])
+# 
+#         folders_to_write = self.filterPahts(folders_to_write) #Filters the folder path to get only its name.
+#         self.CBToStore.addItems(folders_to_write)
+# 
+#     def filterPahts(self, collection = None):
+#         filtered = []
+#         for val in collection:
+#             filtered.append(os.path.basename(val))
+# 
+#         return filtered
+#===============================================================================
 
 
     def ToClosed(self):

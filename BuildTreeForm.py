@@ -53,9 +53,6 @@ class BuildTree(QDialog, Ui_Dialog):
             type(self)._shelvPath = val
 
 
-
-
-
     def chooseFolder(self):
         shelv_path, _ = QFileDialog().getOpenFileName(self, "Select File", "","shelve(*.db, *.dat, *.bak)")
         if shelv_path != '':
