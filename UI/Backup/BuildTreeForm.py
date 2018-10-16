@@ -2,10 +2,7 @@
 Created on Oct 13, 2018
 
 @author: chernomirdinmacuvele
-@colaborator: felicianoMazoio
 '''
-from PyQt5.QtWidgets import QFileDialog
-
 from ui_TreeForm import Ui_Dialog
 from PyQt5.Qt import QDialog, QLabel, Qt, QLineEdit, QCheckBox, QPushButton,\
     QVBoxLayout, QTreeView
@@ -19,30 +16,14 @@ class BuildTree(QDialog, Ui_Dialog):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-
-
-        #This part of the code defines a static variable of the class
-        #it is shelvPath because i may need to use this on other classes
-        _shelvPath = None
-
-        @property
-        def shelvPath(self):
-            return type(self)._shelvPath
-
-        @shelvPath.setter
-        def shelvPath(self, val):
-            type(self)._shelvPath = val
-
-
-        BuildTree.shelvPath = None
+        
         self.mdxClicked = None
         self.nodoRoot = None
         self.mainAppFolder = None
-        self.pathRoot = None
-        self.shelvPath = os.path.expanduser(os.path.join('~','File Mx'))
-
+        
         self.setRootObj()
         self.setModel()
+        self.createSavedDirs()
         self.setTreeModule()
         
         self.twTreeObj.clicked.connect(self.onTreeClick)
@@ -50,44 +31,18 @@ class BuildTree(QDialog, Ui_Dialog):
         self.pbAdd.clicked.connect(self.onAddClicked)
         self.pbRemove.clicked.connect(self.onRemoveClicked)
         self.tbClean.clicked.connect(self.setToNone)
-        self.pbCarregar.clicked.connect(self.chooseFolder)
-        self.pbCancelar.clicked.connect(self.close)
         self.pbMake.clicked.connect(self.onMakeClicked)
 
 
-
-    def chooseFolder(self):
-        BuildTree.shelvPath = None;
-
-        shelv_path, _ = QFileDialog().getOpenFileName(self, "Select File", "","shelve(*.db, *.dat, *.bak)")
-        if shelv_path != '':
-            self.shelvPath = shelv_path.split(".")[0]
-            self.setTreeModule()
-            self.setStaticPath(path = shelv_path)
-        else:
-            self.shelvPath = "No file Opened"
-
-    def setStaticPath(self, path = None):
-        BuildTree.shelvPath = path
-
-
-
     def setTreeModule(self):
-
-        shelveFile = shelve.open(self.shelvPath)
-        if(len(shelveFile.keys()) > 0):
-
-            self.nodoRoot = shelveFile['mainRoot']
-            self.dictInfo = shelveFile['mainDict']
-            self.nodoRoot = list(self.dictInfo.keys())[0]
-            # rootModel = TreeBuilder.TreeModel(self.nodoRoot)
-            # self.twTreeObj.setModel(rootModel)
-            self.setModel()
-            self.createSavedDirs()
+        shelveFile = shelve.open('mainConfigs')
+        rootObject = shelveFile['mainRoot']
+        rootModel = TreeBuilder.TreeModel(rootObject)
+        self.twTreeObj.setModel(rootModel)
 
 
     def createSavedDirs(self):
-        shelveFile = shelve.open(self.shelvPath)
+        shelveFile = shelve.open('mainConfig')
         AbsMethods.createSavedPaths(shelveFile['mainDict'])
         
     def onMakeClicked(self):
@@ -95,12 +50,10 @@ class BuildTree(QDialog, Ui_Dialog):
         print(nodoObj.log())
         #Create a shelve object and store 
         #the dictionary and the noot objects
-        name = "mainConfig"
-        shelveFile = shelve.open(name)
+        shelveFile = shelve.open('mainConfig')
         shelveFile['mainRoot'] = self.nodoRoot
         shelveFile['mainDict'] = self.dictInfo
         shelveFile.close()
-        BuildTree.shelvPath = os.path.join(os.getcwd(), name)
         
     
     def onTreeClick(self, mdx):
@@ -129,26 +82,14 @@ class BuildTree(QDialog, Ui_Dialog):
     def onAddClicked(self):
         nameOut, ToStore = AbsMethods.getName(self.dictInfo) #Get name and if it is to store
         ParentNodoObj = self.getParentNodes() #get parent nodo object
-
-        dict_keys = list(self.dictInfo.keys())
-        dict_keys_names =[]
-
-        for key in dict_keys:
-            dict_keys_names.append(key.name())
-
-        index = dict_keys_names.index(ParentNodoObj.name())
-
-        ParentNodoObj = dict_keys[index]
-
-        if nameOut is not None:
-            bOK, dirFolder = AbsMethods.setFolder(nameOut, ParentNodoObj, self.dictInfo) #adiconar folder ao directorio main
-            if bOK:
-                nodoObj = TreeBuilder.th0_Nodo(nameOut, ParentNodoObj)
-                self.setDict(nodoObj, dirFolder, ToStore)
-                self.setModel()
-            else:
-                #add msgBox here
-                print("Nao sera possivel criar directorio porque o directorio ja e existente!")
+        bOK, dirFolder = AbsMethods.setFolder(nameOut, ParentNodoObj, self.dictInfo) #adiconar folder ao directorio main
+        if bOK:
+            nodoObj = TreeBuilder.th0_Nodo(nameOut, ParentNodoObj)
+            self.setDict(nodoObj, dirFolder, ToStore)
+            self.setModel()
+        else:
+            #add msgBox here
+            print("Nao sera possivel criar directorio porque o directorio ja e existente!")
     
     
     def onDoubleClicked(self, mdix):
@@ -185,8 +126,6 @@ class BuildTree(QDialog, Ui_Dialog):
     
     
     def setRootObj(self):
-
-
         rootName = "File Mx"
         self.nodoRoot = TreeBuilder.th0_Nodo(rootName) #Creates a nodo
         rootModel = TreeBuilder.TreeModel(self.nodoRoot) #Convert the nodo to a model

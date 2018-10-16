@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/Users/chernomirdinmacuvele/Documents/workspace/File_MX_EE/UI/ui_Main.ui'
+# Form implementation generated from reading ui file 'ui_Main.ui'
 #
-# Created by: PyQt5 UI code generator 5.8.2
+# Created by: PyQt5 UI code generator 5.10.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -36,39 +36,16 @@ class Ui_MainWindow(object):
         self.verticalLayout_3.addWidget(self.PBSearchSort)
         spacerItem = QtWidgets.QSpacerItem(20, 18, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout_3.addItem(spacerItem)
-        self.ficheriosLabel = QtWidgets.QLabel(self.centralwidget)
-        font = QtGui.QFont()
-        font.setBold(True)
-        font.setWeight(75)
-        self.ficheriosLabel.setFont(font)
-        self.ficheriosLabel.setAlignment(QtCore.Qt.AlignCenter)
-        self.ficheriosLabel.setObjectName("ficheriosLabel")
-        self.verticalLayout_3.addWidget(self.ficheriosLabel)
-        self.filesListWidget = QtWidgets.QListWidget(self.centralwidget)
-        self.filesListWidget.setObjectName("filesListWidget")
-        self.verticalLayout_3.addWidget(self.filesListWidget)
         self.gridLayout.addLayout(self.verticalLayout_3, 0, 1, 1, 1)
         self.verticalLayout_4 = QtWidgets.QVBoxLayout()
         self.verticalLayout_4.setObjectName("verticalLayout_4")
-        self.label = QtWidgets.QLabel(self.centralwidget)
-        self.label.setAlignment(QtCore.Qt.AlignCenter)
-        self.label.setObjectName("label")
-        self.verticalLayout_4.addWidget(self.label)
-        self.PTEDescricao = QtWidgets.QPlainTextEdit(self.centralwidget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Expanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.PTEDescricao.sizePolicy().hasHeightForWidth())
-        self.PTEDescricao.setSizePolicy(sizePolicy)
-        self.PTEDescricao.setReadOnly(True)
-        self.PTEDescricao.setObjectName("PTEDescricao")
-        self.verticalLayout_4.addWidget(self.PTEDescricao)
         self.PBOpen = QtWidgets.QPushButton(self.centralwidget)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.PBOpen.sizePolicy().hasHeightForWidth())
         self.PBOpen.setSizePolicy(sizePolicy)
+        self.PBOpen.setText("")
         self.PBOpen.setObjectName("PBOpen")
         self.verticalLayout_4.addWidget(self.PBOpen)
         self.PBOpen_2 = QtWidgets.QPushButton(self.centralwidget)
@@ -77,6 +54,7 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.PBOpen_2.sizePolicy().hasHeightForWidth())
         self.PBOpen_2.setSizePolicy(sizePolicy)
+        self.PBOpen_2.setText("")
         self.PBOpen_2.setObjectName("PBOpen_2")
         self.verticalLayout_4.addWidget(self.PBOpen_2)
         self.gridLayout.addLayout(self.verticalLayout_4, 1, 1, 1, 1)
@@ -115,10 +93,6 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "File Mx Cloud Beta"))
         self.PBConfigurar.setText(_translate("MainWindow", "Configurar"))
         self.PBSearchSort.setText(_translate("MainWindow", "Pesquisar / Organizar"))
-        self.ficheriosLabel.setText(_translate("MainWindow", "Ficheiros"))
-        self.label.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" font-weight:600;\">Descrição</span></p></body></html>"))
-        self.PBOpen.setText(_translate("MainWindow", "Abrir"))
-        self.PBOpen_2.setText(_translate("MainWindow", "Descarregar"))
         self.PBAdicionar.setText(_translate("MainWindow", "Adicionar"))
         self.PBFechar.setText(_translate("MainWindow", "Fechar"))
         self.PBRemover.setText(_translate("MainWindow", "Remover"))
