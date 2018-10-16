@@ -19,7 +19,22 @@ class BuildTree(QDialog, Ui_Dialog):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        
+
+
+        #This part of the code defines a static variable of the class
+        #it is shelvPath because i may need to use this on other classes
+        _shelvPath = None
+
+        @property
+        def shelvPath(self):
+            return type(self)._shelvPath
+
+        @shelvPath.setter
+        def shelvPath(self, val):
+            type(self)._shelvPath = val
+
+
+        BuildTree.shelvPath = None
         self.mdxClicked = None
         self.nodoRoot = None
         self.mainAppFolder = None
@@ -40,25 +55,17 @@ class BuildTree(QDialog, Ui_Dialog):
         self.pbMake.clicked.connect(self.onMakeClicked)
 
 
-        #This part of the code defines a static variable of the class
-        #it is shelvPath because i may need to use this on other classes
-        _shelvPath = self.shelvPath
-
-        @property
-        def shelvPath(self):
-            return type(self)._shelvPath
-
-        @shelvPath.setter
-        def shelvPath(self, val):
-            type(self)._shelvPath = val
-
 
     def chooseFolder(self):
+        BuildTree.shelvPath = None;
+
         shelv_path, _ = QFileDialog().getOpenFileName(self, "Select File", "","shelve(*.db, *.dat, *.bak)")
         if shelv_path != '':
             self.shelvPath = shelv_path.split(".")[0]
             self.setTreeModule()
             self.setStaticPath(path = shelv_path)
+        else:
+            self.shelvPath = "No file Opened"
 
     def setStaticPath(self, path = None):
         BuildTree.shelvPath = path
@@ -93,6 +100,7 @@ class BuildTree(QDialog, Ui_Dialog):
         shelveFile['mainRoot'] = self.nodoRoot
         shelveFile['mainDict'] = self.dictInfo
         shelveFile.close()
+        BuildTree.shelvPath = os.path.join(os.getcwd(), name)
         
     
     def onTreeClick(self, mdx):

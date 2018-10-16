@@ -5,6 +5,8 @@ Created on 16/04/2018
 
 from PyQt5.Qt import QApplication, QStyleFactory
 import sys
+
+import SettingsForm
 from InternetServices import Thread_Internet_Status
 import BuildTreeForm
 import DocumentoForm
@@ -30,8 +32,9 @@ if __name__ == '__main__':
     
     # frm = BuildTreeForm.BuildTree() #Whats missing build the folders from an already existem tree
     # frm.exec_()
-    form2Show = DocumentoForm.frm_Documento()
-    form2Show.exec_()
+
+    frm = SettingsForm.Settings_Frm()
+    frm.exec_()
     
     
     try:
