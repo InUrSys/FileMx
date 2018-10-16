@@ -30,11 +30,11 @@ if __name__ == '__main__':
     InternetThread.status.connect(InternetStatus)
     InternetThread.start()
 
-    form2Show = DocumentoForm.frm_Documento()
-    form2Show.exec_()
+    #form2Show = DocumentoForm.frm_Documento()
+    #form2Show.exec_()
     
-    #mainApp = frm_Main()
-    #mainApp.show()
+    mainApp = frm_Main()
+    mainApp.show()
     
     try:
         app.verbose_crash = True

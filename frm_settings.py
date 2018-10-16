@@ -1,6 +1,6 @@
 from PyQt5.QtGui import QIcon, QPixmap
 
-from ui_settings_categoria import Ui_Form
+
 from ExtraExtra import Generic_extra
 import sqlMagic
 import mixedModel
@@ -12,7 +12,7 @@ import FuncSQL
 from PyQt5.Qt import QLineEdit, QComboBox, QPlainTextEdit, QListWidget, QDate
 from builtins import str
 
-class frm_setting_categoria(Ui_Form, Generic_extra):
+class frm_setting_categoria( Generic_extra):
     def __init__(self,dbcon = None):
         super().__init__()
         self.setupUi(self)

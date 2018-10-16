@@ -36,7 +36,7 @@ def setBlobToGet(fileName, jsonFile, NomeBalde):
             print("Ficherio nao Existe")
         
     
-def setBlobToUpload():
+def setBlobToUpload(fileName, jsonFile, NomeBalde):
     bucket = setConnectionToCloud(jsonFile, NomeBalde)
     #to upload file 
     if bucket != None:
@@ -49,14 +49,14 @@ def setBlobToUpload():
 
 def getListItem(jsonFile, NomeBalde):
     bucket = setConnectionToCloud(jsonFile, NomeBalde)
-    lst_blobs = bucket.list_blobs()
-    lst=[]
-    for blob in lst_blobs:
-        nome = blob.name
-        typeDoc, dateOut, timeOut = makeItReadeble(nome)
-        lst.append((blob, typeDoc, dateOut, timeOut))
-        
-    print(lst)
+    if bucket != None:
+        lst_blobs = bucket.list_blobs()
+        lst=[]
+        for blob in lst_blobs:
+            nome = blob.name
+            typeDoc, dateOut, timeOut = makeItReadeble(nome)
+            lst.append((blob, typeDoc, dateOut, timeOut))
+        return lst
     
 def makeItReadeble(nome):
     lstData = nome.split('__')
@@ -116,8 +116,4 @@ def delete(blob):
 
 
 
-startTime = time.time()
-fileName = "FileMX__2000_Jan_1__20_25__Factura__.pdf"
-setConnectionToCloud(jsonFile, NomeBalde)
-#upload(blob, fileName)
-print("--- %s seconds ---" % (time.time() - startTime))
+

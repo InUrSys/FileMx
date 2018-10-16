@@ -14,15 +14,32 @@ from pdfrw.pagemerge import PageMerge
 import os
 import platform
 from datetime import datetime
-from PyQt5.Qt import QDialog
+from PyQt5.Qt import QDialog, QStandardItemModel, QStandardItem, QDate,\
+    QTableView, QTableWidget, QTableWidgetItem, QTime
 from PyQt5.Qt import QFileDialog
 import QT_msg
 import mixedModel
 import shelve
 
-
 class Generic_extra(QDialog):
-
+    
+    def makeModel(self, tbView, mtxIn):
+        tbView.setRowCount(len(mtxIn))
+        tbView.setColumnCount(len(mtxIn[0]))
+        for i, row in enumerate(mtxIn):
+            for j, val in enumerate(row):
+                
+                if type(val) == QDate:
+                    val= val.toPyDate().isoformat()
+                elif type(val) == QTime:
+                    val= val.toPyDate().isoformat()
+                elif type(val) == str or type(val) == int:
+                else:
+                    name = val.name
+                item = QTableWidgetItem(str(val))
+                tbView.setItem(i,j, item)
+            
+    
     #on click get the path where the file is (IMG)
     def getFile(self):
         isImg=None
