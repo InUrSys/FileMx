@@ -109,13 +109,8 @@ def getDate(dateIn):
 
 
 def upload(blob, fileToUpload):
-    #to upload \blod
-    #copy to cur dir
-    curDir = os.getcwd() 
-    newFile = shutil.copy(fileToUpload, curDir)
-    
-    #blob.upload_from_filename(fileToUpload)
-    #send2trash.send2trash(newFile)
+    blob.upload_from_filename(fileToUpload)
+    send2trash.send2trash(fileToUpload)
     
 
 def download(blob, fileToDown):

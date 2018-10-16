@@ -49,9 +49,9 @@ class frm_Main(Ui_MainWindow, QMainWindow):
         self.TVFiles.setSelectionBehavior(QAbstractItemView.SelectRows)
     
     def setCon(self):
-        jsonFile = 'File Mx EE-de38156917d4.json'
-        NomeBalde = '1_empresa'
-        self.setCon = Thread_Google_Bucket(jsonFile, NomeBalde)
+        self.jsonFile = 'File Mx EE-de38156917d4.json'
+        self.NomeBalde = '1_empresa'
+        self.setCon = Thread_Google_Bucket(self.jsonFile, self.NomeBalde)
         self.setCon.bucket.connect(self.setBucket)
         self.setCon.start()
         
@@ -66,5 +66,5 @@ class frm_Main(Ui_MainWindow, QMainWindow):
 
     
     def onAddClicked(self):
-        frmAdd = DocumentoForm.frm_Documento()
+        frmAdd = DocumentoForm.frm_Documento(self.jsonFile, self.NomeBalde)
         frmAdd.exec_()

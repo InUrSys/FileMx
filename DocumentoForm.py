@@ -19,13 +19,18 @@ from datetime import datetime
 from PyQt5.Qt import QDateEdit, QComboBox
 import MainForm
 import CloudStorage
+import shutil
+from Services import Thread_Google_Uploader
+import send2trash
 
 class frm_Documento(Ui_Form, Generic_extra):
-    def __init__(self):
+    def __init__(self, jsonFile=None, bucketName=None):
 
         super().__init__()
         self.setupUi(self)
         
+        self.jsonFile = jsonFile
+        self.bucketName = bucketName
         #self.dbcon=dbcon
 
         self.extra = Generic_extra()
@@ -127,12 +132,24 @@ class frm_Documento(Ui_Form, Generic_extra):
         
     
     def saving_part2(self,lstObjOut):
-        self.bucket = MainForm.frm_Main().bucket
+        bucket = CloudStorage.setConnectionToCloud(self.jsonFile, self.bucketName)
         for mxFile in lstObjOut:
-            blob = CloudStorage.setBlobToUpload(mxFile, self.bucket)
-            CloudStorage.upload(blob, mxFile)
+            curDir = os.getcwd() 
+            newFile = shutil.copy(mxFile, curDir)
+            _, fileToUpload = os.path.split(newFile)
+            blob = CloudStorage.setBlobToUpload(fileToUpload, bucket)
+            if blob != None:
+                self.uploading = Thread_Google_Uploader(blob, fileToUpload)
+                self.uploading.done.connect(self.clean)
+                self.uploading.start()
+                #CloudStorage.upload(blob, fileToUpload)
         
-    
+    def clean(self, bOK, fileToClean):
+        if bOK:
+            send2trash.send2trash(fileToClean)
+            self.newFile = None
+            print('Cleanned')
+            
         
     def clearWdg(self):
         #self.getLast()

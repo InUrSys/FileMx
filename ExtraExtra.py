@@ -140,9 +140,11 @@ class Generic_extra(QDialog):
         lstNameOut= []
         if lstPdfIn != []:
             try:
+                
                 Mx_name = self.name_Generator()
                 for idx, pdf in enumerate(lstPdfIn):
-                    
+                    _, file = os.path.split(pdf)
+                    file_name = self.extract_file_name(file) 
                     if self.PTEInfo.toPlainText() == '':
                         info = 'N/A'
                     else:
@@ -154,7 +156,7 @@ class Generic_extra(QDialog):
                     dictIn= {
                             'cod':str(cod),
                             'doc_num':str(idx+1)+" Of "+str(len(lstPdfIn)),
-                            'nome':Mx_name,
+                            'nome':file_name,
                             'data':datetime.today().date().isoformat(),
                             'horas':datetime.today().time().isoformat(),
                             'treePath': self.CBToStore.currentText(),
@@ -170,7 +172,7 @@ class Generic_extra(QDialog):
                                        systemEncoding = dictIn['systemEncoding'], os = dictIn['os'], numero = idx)#Dict where we gointo insert our metadata
                     trailer.Info.clear() #we clear the default data that the lib adds
                     trailer.Info.update(metadata)#We add our own Metadata
-                    _, file = os.path.split(pdf)
+                    
                     abs_path = self.CBToStore.currentText()
                     if abs_path == None:
                         return False, None
@@ -178,8 +180,8 @@ class Generic_extra(QDialog):
                         cat =self.CBType.currentText()
                         file_path = self.return_path(abs_path, cat)
                         #file_mx = file[:7] #separe the firts 6 char
-                        file_name = self.extract_file_name(file) + ".pdf"
-                        namePath = os.path.join(file_path, file_name)
+                        
+                        namePath = os.path.join(file_path, Mx_name+ ".pdf")
                         PdfWriter().write(namePath, trailer)
                         lstNameOut.append(namePath)
                 bOK=True
