@@ -147,7 +147,6 @@ class frm_Documento(Ui_Form, Generic_extra):
     def clean(self, bOK, fileToClean):
         if bOK:
             send2trash.send2trash(fileToClean)
-            self.newFile = None
             print('Cleanned')
             
         
