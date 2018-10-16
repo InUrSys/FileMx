@@ -17,9 +17,11 @@ import os
 import FuncSQL
 from datetime import datetime
 from PyQt5.Qt import QDateEdit, QComboBox
+import MainForm
+import CloudStorage
 
 class frm_Documento(Ui_Form, Generic_extra):
-    def __init__(self, dbcon=None):
+    def __init__(self):
 
         super().__init__()
         self.setupUi(self)
@@ -43,10 +45,8 @@ class frm_Documento(Ui_Form, Generic_extra):
         self.LWPaths.clicked.connect(self.clickedItem) #working 100%
         self.LWPaths.doubleClicked.connect(self.DoubleclickedItem) #working 100%
         self.PBSave.clicked.connect(self.start_Save)
-        # self.settingsButton.clicked.connect(self.goToSettings)
-        #self.isClosed=True
         self.PBClose.clicked.connect(self.ToClosed) #working 100%
-        #self.setUpEffects()
+       
 
 #===============================================================================
 #     def getShelvePath(self):
@@ -98,12 +98,7 @@ class frm_Documento(Ui_Form, Generic_extra):
 
     def setUpIcons(self):
         self.settingsButton.setIcon(QIcon(QPixmap(os.path.join(os.getcwd(),"res","settings.png"))))
-        print("here")
-        # lst_wd = QListWidgetItem()
-        # lst_wd.setText("File_Mx_1");
-        # lst_wd.setIcon(QIcon(QPixmap(os.path.join("res", "Layer 1.png"))));
-        # self.LWPathsPdf.addItem(lst_wd)
-
+        
 
     def goToSettings(self):
         self.settings_window = settings(self.dbcon);
@@ -113,24 +108,6 @@ class frm_Documento(Ui_Form, Generic_extra):
 
 
     def start_Save(self):
-        #=======================================================================
-        # #Get the info from the widget
-        # pathToDir = self.getDirMx()
-        # if pathToDir == None:
-        #     form = setting_Path()
-        #     form.exec_() 
-        # 
-        # #The saving PRocess
-        # if self.CBType.currentIndex() == 0:
-        #     QT_msg.aviso(txt='Não e possivel salver um Dado sem a sua <b>Categoria</b>.')
-        # else:
-        #=======================================================================
-        self.saving_part2()
-        
-    
-    def saving_part2(self):
-        bOK=None
-        
         self.CBType.addItems(["Factura"])
         self.CBToStore.addItems(["/Users/chernomirdinmacuvele/File Mx/BIM/RH/Steban"])
 
@@ -141,37 +118,21 @@ class frm_Documento(Ui_Form, Generic_extra):
         
         bOK, lstObjOut = self.AddMetadata(lstPdfIn=self.lstPdf)
         if bOK==True:
-            #self.saveToDatabase(lstObjOut=lstObjOut)
             QT_msg.Sucessos(txt='Ficheiro <b>MX</b> Criado com Sucesso')
+            self.saving_part2(lstObjOut)
             self.clearWdg()
         elif bOK==False:
             QT_msg.aviso(txt='Erro ao Criar Ficheiro <b>MX</b>!<p> Por favor tente novamente.')
-         
+        return bOK
+        
     
-    def saveToDatabase(self, lstObjOut):
-        strLst='lista: '
-        for idx, obj in enumerate(lstObjOut):
-            if idx+1 == len(lstObjOut):
-                strLst+=obj
-            else:
-                strLst+=obj+','
-        if self.PTEInfo.toPlainText() == '':
-            info = 'N/A'
-        else:
-            info = self.PTEInfo.toPlainText()
-        bOK, msg = FuncSQL.insertVal(tblName='docfile', 
-                          lstNames=['cod', 'cod_type',
-                                    'path_file', 'data_file', 
-                                    'info_file'], 
-                          lstVal=[self.SBCod.text(), mixedModel.getDataCombox(widg=self.CBType),
-                                  strLst, self.DEData.date().toPyDate().isoformat(),
-                                  info], 
-                          lstQuot=[False, True,
-                                   True, True,
-                                   True])     
-        if bOK != True:
-            QT_msg.aviso(txt=msg)   
-            
+    def saving_part2(self,lstObjOut):
+        self.bucket = MainForm.frm_Main().bucket
+        for mxFile in lstObjOut:
+            blob = CloudStorage.setBlobToUpload(mxFile, self.bucket)
+            CloudStorage.upload(blob, mxFile)
+        
+    
         
     def clearWdg(self):
         #self.getLast()
@@ -182,18 +143,6 @@ class frm_Documento(Ui_Form, Generic_extra):
         self.lstPdf.clear()
         self.LWPaths.clear()
         
-
-    """
-    ::>> BakcSlahs : modified : 04_07_2018
-    def setFileName(self):
-        #Clear name form LEdit
-        if self.CBType.currentIndex() == 0:
-            self.LEName.clear()
-        else:
-            #get name from generator
-            name = self.name_Generator()
-            self.LEName.setText(str(name))
-    """        
         
     def configCbModel(self):
         #Fill the combox (--tipo de documento--)

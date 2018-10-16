@@ -7,6 +7,10 @@ Created on Oct 11, 2018
 from google.cloud import storage
 from PyQt5.Qt import QDate, QTime
 import time
+import shutil
+import os
+import ExtraExtra
+import send2trash
 
 
 #Create sotrage client
@@ -106,8 +110,13 @@ def getDate(dateIn):
 
 def upload(blob, fileToUpload):
     #to upload \blod
-    blob.upload_from_filename(fileToUpload)
-
+    #copy to cur dir
+    curDir = os.getcwd() 
+    newFile = shutil.copy(fileToUpload, curDir)
+    
+    #blob.upload_from_filename(fileToUpload)
+    #send2trash.send2trash(newFile)
+    
 
 def download(blob, fileToDown):
     #download

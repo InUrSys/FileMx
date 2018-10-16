@@ -11,6 +11,7 @@ import time
 from ExtraExtra import Generic_extra
 from CloudStorage import setConnectionToCloud
 from Services import Thread_Google_Bucket
+import DocumentoForm
 
 
 class frm_Main(Ui_MainWindow, QMainWindow):
@@ -20,6 +21,7 @@ class frm_Main(Ui_MainWindow, QMainWindow):
         
         self.setCon()
         self.bucket = None
+        self.PBAdicionar.clicked.connect(self.onAddClicked)
     
     def setCon(self):
         jsonFile = '/Users/chernomirdinmacuvele/Documents/workspace/File_MX_EE/File Mx EE-de38156917d4.json'
@@ -36,4 +38,7 @@ class frm_Main(Ui_MainWindow, QMainWindow):
     def setViewer(self):
         if self.lstOut != None:
             Generic_extra.makeModel(Generic_extra, self.TVFiles, self.lstOut)
-            
+    
+    def onAddClicked(self):
+        frmAdd = DocumentoForm.frm_Documento()
+        frmAdd.exec_()

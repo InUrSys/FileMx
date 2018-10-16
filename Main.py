@@ -15,24 +15,6 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     app.setStyle(QStyleFactory.create("Fusion"))
     
-    internetStatus = bool
-    
-    def InternetStatus(status):
-        '''
-        Set interentStatus Var global
-        and adding it a state (True or False)
-        '''
-        global internetStatus 
-        internetStatus = status
-        
-    
-    InternetThread = Thread_Internet_Status()
-    InternetThread.status.connect(InternetStatus)
-    InternetThread.start()
-
-    #form2Show = DocumentoForm.frm_Documento()
-    #form2Show.exec_()
-    
     mainApp = frm_Main()
     mainApp.show()
     

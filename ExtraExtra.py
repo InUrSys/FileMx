@@ -44,7 +44,7 @@ class Generic_extra(QDialog):
     def getFile(self):
         isImg=None
         lstImg = ['.jpg', '.png', '.jpeg', '.gif', '.tiff', '.bmp']
-        filepath, _ = QFileDialog().getOpenFileName(self, "Select File", "","Images or pdf(*.png *.jpg *.pdf *.gif *.tiff *.bmp")
+        filepath, _ = QFileDialog().getOpenFileName(self, "Select File", "","Images or pdf(*.png *.jpg *.jpeg *.pdf *.gif *.tiff *.bmp")
         if filepath != '':
             _, formatX = os.path.splitext(filepath)
             formatX = formatX.lower()
