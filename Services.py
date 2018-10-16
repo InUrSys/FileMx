@@ -16,8 +16,9 @@ class Thread_Google_Bucket(QThread):
     def run(self):
         while True:
             bucket = setConnectionToCloud(jsonFile=self.jsonFile, NomeBalde=self.bucketName)
-            self.bucket.emit(bucket)
-            time.sleep(1)
+            if bucket != None:
+                self.bucket.emit(bucket)
+                time.sleep(1)
 
 
 class Thread_Google_Uploader(QThread):
@@ -29,6 +30,8 @@ class Thread_Google_Uploader(QThread):
         self.fileToUpload = fileToUpload
 #          
     def run(self):
-        self.blob.upload_from_filename(self.fileToUpload)
-        #send2trash.send2trash(self.fileToUpload)
-        self.done.emit(True, self.fileToUpload)
+        while True:
+            self.blob.upload_from_filename(self.fileToUpload)
+            #send2trash.send2trash(self.fileToUpload)
+            self.done.emit(True, self.fileToUpload)
+            break

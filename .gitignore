@@ -12,6 +12,7 @@ temp_files/
 .bak
 .dat
 .dir
+*.pdf
 *.bak
 *.dat
 *.db

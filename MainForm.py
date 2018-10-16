@@ -9,7 +9,7 @@ from PyQt5.QtGui import QIcon, QPixmap
 
 import SettingsForm
 from ui_Main import Ui_MainWindow
-from PyQt5.Qt import QMainWindow, QStandardItemModel
+from PyQt5.Qt import QMainWindow, QStandardItemModel, QPushButton
 import CloudStorage
 from PyQt5.QtWidgets import QTreeWidget, QAbstractItemView, QTableWidget
 import time
@@ -17,6 +17,7 @@ from ExtraExtra import Generic_extra
 from CloudStorage import setConnectionToCloud
 from Services import Thread_Google_Bucket
 import DocumentoForm
+import send2trash
 
 
 class frm_Main(Ui_MainWindow, QMainWindow):
@@ -26,16 +27,29 @@ class frm_Main(Ui_MainWindow, QMainWindow):
         
         self.setCon()
         self.setUpIcons()
-
+        self.clearTempFiles()
         self.selectionBehavior()
         self.PBConfigurar.clicked.connect(self.openConfig)
         self.TVFiles.clicked.connect(self.obtainBlob)
         self.bucket = None
         self.PBAdicionar.clicked.connect(self.onAddClicked)
+        self.PBRemover.clicked.connect(self.deleteFile)
         self.blob = None
+        
+        
+    def clearTempFiles(self):
+        try:
+            send2trash.send2trash('temp_files')
+        except OSError:
+            pass
+
+    def disableButton(self):
+        self.blob = None
+        self.PBRemover.setEnabled(False)
 
     def obtainBlob(self, mdx):
         self.blob = self.lstOut[mdx.row()][0]
+        self.PBRemover.setEnabled(True)
 
     def setUpIcons(self):
         self.PBOpen.setIcon(QIcon(QPixmap(os.path.join("res","open.png"))))
@@ -44,9 +58,17 @@ class frm_Main(Ui_MainWindow, QMainWindow):
     def openConfig(self):
         frm = SettingsForm.Settings_Frm()
         frm.exec_()
-
+        self.disableButton()
+        
+    def deleteFile(self):
+        CloudStorage.delete(self.blob)
+        print("Item removido")
+        
+        
+        
     def selectionBehavior(self):
         self.TVFiles.setSelectionBehavior(QAbstractItemView.SelectRows)
+    
     
     def setCon(self):
         self.jsonFile = 'File Mx EE-de38156917d4.json'
@@ -54,6 +76,7 @@ class frm_Main(Ui_MainWindow, QMainWindow):
         self.setCon = Thread_Google_Bucket(self.jsonFile, self.NomeBalde)
         self.setCon.bucket.connect(self.setBucket)
         self.setCon.start()
+        
         
     def setBucket(self, bucket):
         self.bucket = bucket
@@ -68,3 +91,4 @@ class frm_Main(Ui_MainWindow, QMainWindow):
     def onAddClicked(self):
         frmAdd = DocumentoForm.frm_Documento(self.jsonFile, self.NomeBalde)
         frmAdd.exec_()
+        self.disableButton()
