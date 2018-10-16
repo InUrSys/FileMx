@@ -6,6 +6,7 @@ Created on 16/04/2018
 from PyQt5.Qt import QApplication, QStyleFactory
 import sys
 
+import MainForm
 import SettingsForm
 from InternetServices import Thread_Internet_Status
 import BuildTreeForm
@@ -32,10 +33,13 @@ if __name__ == '__main__':
     
     # frm = BuildTreeForm.BuildTree() #Whats missing build the folders from an already existem tree
     # frm.exec_()
+    #
+    # frm = SettingsForm.Settings_Frm()
+    # frm.exec_()
 
-    frm = SettingsForm.Settings_Frm()
-    frm.exec_()
-    
+    frm  = MainForm.frm_Main()
+    frm.show()
+
     
     try:
         app.verbose_crash = True
