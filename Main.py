@@ -28,10 +28,10 @@ if __name__ == '__main__':
     InternetThread.status.connect(InternetStatus)
     InternetThread.start()
     
-    frm = BuildTreeForm.BuildTree() #Whats missing build the folders from an already existem tree
-    frm.exec_()
-    # form2Show = DocumentoForm.frm_Documento()
-    # form2Show.exec_()
+    # frm = BuildTreeForm.BuildTree() #Whats missing build the folders from an already existem tree
+    # frm.exec_()
+    form2Show = DocumentoForm.frm_Documento()
+    form2Show.exec_()
     
     
     try:

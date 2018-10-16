@@ -1,5 +1,7 @@
 /__pycache__
 __pycache__/
+/temp_files
+temp_files/
 *.py[cod]
 .DS_Store
 ._.DS_Store

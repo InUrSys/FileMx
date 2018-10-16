@@ -14,15 +14,32 @@ from pdfrw.pagemerge import PageMerge
 import os
 import platform
 from datetime import datetime
-from PyQt5.Qt import QDialog
+from PyQt5.Qt import QDialog, QStandardItemModel, QStandardItem, QDate,\
+    QTableView, QTableWidget, QTableWidgetItem, QTime
 from PyQt5.Qt import QFileDialog
 import QT_msg
 import mixedModel
 import shelve
 
-
 class Generic_extra(QDialog):
-
+    
+    def makeModel(self, tbView, mtxIn):
+        tbView.setRowCount(len(mtxIn))
+        tbView.setColumnCount(len(mtxIn[0]))
+        for i, row in enumerate(mtxIn):
+            for j, val in enumerate(row):
+                
+                if type(val) == QDate:
+                    val= val.toPyDate().isoformat()
+                elif type(val) == QTime:
+                    val= val.toPyDate().isoformat()
+                elif type(val) == str or type(val) == int:
+                else:
+                    name = val.name
+                item = QTableWidgetItem(str(val))
+                tbView.setItem(i,j, item)
+            
+    
     #on click get the path where the file is (IMG)
     def getFile(self):
         isImg=None
@@ -65,10 +82,14 @@ class Generic_extra(QDialog):
             
     
     def name_Generator(self):
-        name = "File_MX"
-        date = str(self.DEData.date().year()) +'_'+ str(self.DEData.date().month()) +'_'+ str(self.DEData.date().day()) +'_'+  str(datetime.today().hour)  +'_'+  str(datetime.today().minute) +'_'+  str(datetime.today().second)
+        self.create_month_dict()
+        month = self.month_string.get(str(self.DEData.date().month()))
+        
+        name = "FileMX"
+        date = str(self.DEData.date().year()) +'_'+ month +'_'+ str(self.DEData.date().day())
+        tempo = str(datetime.today().hour)  +'_'+  str(datetime.today().minute) #+'_'+  str(datetime.today().second)
         doctype = mixedModel.getDataCombox(widg=self.CBType)
-        nameOut = name+date+doctype
+        nameOut = name+"__"+date+"__"+tempo+"__"+doctype+"__"
         return nameOut
     
     
@@ -85,7 +106,7 @@ class Generic_extra(QDialog):
                     x,y,w,h = 0.3, 0.5, 29, 20 #For LandScape mode
                     pdf.image(imgFile,x,y,w,h)#x,y,w,h
                 else:
-                    pdf.add_page('p')
+                    pdf.add_page('P')
                     x,y,w,h = 0.5, 0.3, 20, 29
                     pdf.image(imgFile,x,y,w,h)#x,y,w,h
 
