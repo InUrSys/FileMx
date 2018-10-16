@@ -2,9 +2,11 @@
 Created on 25/04/2018
 
 @author: chernomirdinmacuvele
+@colaborator: felicianoMazoio
 '''
 import shelve
 
+import QT_msg as msg
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtWidgets import QListWidgetItem
 from frm_settings import frm_setting_categoria as settings
@@ -147,7 +149,7 @@ class frm_Documento(Ui_Form, Generic_extra):
     def clean(self, bOK, fileToClean):
         if bOK:
             send2trash.send2trash(fileToClean)
-            print('Cleanned')
+            msg.Sucessos("Cleanned")
             
         
     def clearWdg(self):

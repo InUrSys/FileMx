@@ -2,10 +2,12 @@
 Created on Oct 15, 2018
 
 @author: chernomirdinmacuvele
+@colaborator: felicianoMazoio
 '''
 import os
 
 from PyQt5.QtGui import QIcon, QPixmap
+import QT_msg as msg
 
 import SettingsForm
 from ui_Main import Ui_MainWindow
@@ -24,6 +26,8 @@ class frm_Main(Ui_MainWindow, QMainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+
+        self.oldLst = None;
         
         self.setCon()
         self.setUpIcons()
@@ -62,8 +66,8 @@ class frm_Main(Ui_MainWindow, QMainWindow):
         
     def deleteFile(self):
         CloudStorage.delete(self.blob)
-        print("Item removido")
-        
+        msg.Sucessos("Item removido")
+
         
         
     def selectionBehavior(self):
@@ -76,11 +80,24 @@ class frm_Main(Ui_MainWindow, QMainWindow):
         self.setCon = Thread_Google_Bucket(self.jsonFile, self.NomeBalde)
         self.setCon.bucket.connect(self.setBucket)
         self.setCon.start()
-        
+
+
+    def checkLists(self):
+        print("check")
+        if str(self.lstOut) != str(self.oldLst):
+            self.PBRemover.setEnabled(False)
+            self.oldLst  = None
+            print("Different")
+
+        else:
+            print("Equal")
+
+        self.oldLst = self.lstOut
         
     def setBucket(self, bucket):
         self.bucket = bucket
         self.lstOut = CloudStorage.getListItem(bucket=self.bucket)
+        self.checkLists()
         self.setViewer()
     
     def setViewer(self):
