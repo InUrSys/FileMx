@@ -12,7 +12,7 @@ import os
 import ExtraExtra
 import send2trash
 
-
+import QT_msg as msg
 #Create sotrage client
 #connectar google cloud Storage
 jsonFile = '/Users/chernomirdinmacuvele/Documents/workspace/File_MX_EE/File Mx EE-de38156917d4.json'
@@ -38,7 +38,7 @@ def setBlobToGet(fileName, bucket=None, jsonFile=None, NomeBalde=None):
             blob = bucket.get_blob(fileName)
             return blob
         else:
-            print("Ficherio nao Existe")
+            msg.error("Erro!", "Ficheiro nao existe.")
         
     
 def setBlobToUpload(fileName, bucket=None, jsonFile=None, NomeBalde=None):
@@ -48,7 +48,7 @@ def setBlobToUpload(fileName, bucket=None, jsonFile=None, NomeBalde=None):
     if bucket != None:
         blob = bucket.blob(fileName)
         if blob.exists():
-            print("Ficherio ja Existe")
+            msg.error("Error!", "Fichiero ja existente")
         else:
             return blob
 

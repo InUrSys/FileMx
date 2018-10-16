@@ -3,7 +3,10 @@ Created on Oct 16, 2018
 
 @author: chernomirdinmacuvele
 '''
+import shelve
+
 import BuildTreeForm
+import QT_msg as msg
 from ui_settings import Ui_Form
 from PyQt5.Qt import QDialog, QFileDialog, QLineEdit
 import os
@@ -17,7 +20,11 @@ class Settings_Frm(QDialog, Ui_Form):
         self.shelvpaht = None;
         self.TBPathJson.clicked.connect(self.selectJsonFile)
         self.TBPath.clicked.connect(self.openTreeModel)
+<<<<<<< HEAD
         self.PBGuardar.clicked.connect()
+=======
+        self.PBGuardar.clicked.connect(self.save)
+>>>>>>> 4920bbc8ba0ebaa914c31f7904d2c7cdf79cda7b
 
 
     def openTreeModel(self):
@@ -46,10 +53,14 @@ class Settings_Frm(QDialog, Ui_Form):
             #Ficheiro valido salvar
             #fechar
             #Criar um ficherio shelve para armazenar os Dados de todos os campos
-            pass
+            shelveFiel = shelve.open("settings")
+            shelve['jsonPath'] = jsonFile
+            shelve['companyName'] = empresa
+            shelve.close()
+            msg.Sucessos("Configuracoes guardadas!")
         else:
             #ficherio nao valido nao salvar e mostrar msg de erro
-            #nao fechar 
-            pass
-    
+            msg.error("Ficheiro Invalido", "Ficheiro nao valido para salvar. Acrescente o nome da empresa")
+            #nao fechar
+
     #save in a shelvewhere the app resides
