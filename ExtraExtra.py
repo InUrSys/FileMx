@@ -20,6 +20,7 @@ from PyQt5.Qt import QFileDialog
 import QT_msg
 import mixedModel
 import shelve
+import google.cloud.storage.blob as g
 
 class Generic_extra(QDialog):
     
@@ -30,12 +31,11 @@ class Generic_extra(QDialog):
             for j, val in enumerate(row):
                 
                 if type(val) == QDate:
-                    val= val.toPyDate().isoformat()
+                    val = val.toPyDate().isoformat()
                 elif type(val) == QTime:
-                    val= val.toPyDate().isoformat()
-                elif type(val) == str or type(val) == int:
-                else:
-                    name = val.name
+                    val = val.toPyTime().isoformat()
+                elif type(val) == g.Blob:
+                    val = val.name
                 item = QTableWidgetItem(str(val))
                 tbView.setItem(i,j, item)
             

@@ -23,8 +23,9 @@ def setConnectionToCloud(jsonFile, NomeBalde):
     return bucket
 
 
-def setBlobToGet(fileName, jsonFile, NomeBalde):
-    bucket = setConnectionToCloud(jsonFile, NomeBalde)
+def setBlobToGet(fileName, bucket=None, jsonFile=None, NomeBalde=None):
+    if jsonFile != None and NomeBalde != None:
+        bucket = setConnectionToCloud(jsonFile, NomeBalde)
     #to upload file 
     if bucket != None:
         #nome que o ficheiro tera na cloud
@@ -36,8 +37,9 @@ def setBlobToGet(fileName, jsonFile, NomeBalde):
             print("Ficherio nao Existe")
         
     
-def setBlobToUpload(fileName, jsonFile, NomeBalde):
-    bucket = setConnectionToCloud(jsonFile, NomeBalde)
+def setBlobToUpload(fileName, bucket=None, jsonFile=None, NomeBalde=None):
+    if jsonFile != None and NomeBalde != None:
+        bucket = setConnectionToCloud(jsonFile, NomeBalde)
     #to upload file 
     if bucket != None:
         blob = bucket.blob(fileName)
@@ -47,8 +49,9 @@ def setBlobToUpload(fileName, jsonFile, NomeBalde):
             return blob
 
 
-def getListItem(jsonFile, NomeBalde):
-    bucket = setConnectionToCloud(jsonFile, NomeBalde)
+def getListItem(bucket=None, jsonFile=None, NomeBalde=None):
+    if jsonFile != None and NomeBalde != None:
+        bucket = setConnectionToCloud(jsonFile, NomeBalde)
     if bucket != None:
         lst_blobs = bucket.list_blobs()
         lst=[]
@@ -57,6 +60,7 @@ def getListItem(jsonFile, NomeBalde):
             typeDoc, dateOut, timeOut = makeItReadeble(nome)
             lst.append((blob, typeDoc, dateOut, timeOut))
         return lst
+    
     
 def makeItReadeble(nome):
     lstData = nome.split('__')
