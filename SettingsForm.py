@@ -56,7 +56,7 @@ class Settings_Frm(QDialog, Ui_Form):
             msg.Sucessos("Configuracoes guardadas!")
         else:
             #ficherio nao valido nao salvar e mostrar msg de erro
-            msg.error("Ficheiro Invalido", "Ficheiro nao valido para salvar. Acrescente o nome da empresa")
+            msg.error("Ficheiro Invalido", "Ficheiro nao valido para salvar. Defina bem o nome da empresa")
             #nao fechar
 
     #save in a shelvewhere the app resides
