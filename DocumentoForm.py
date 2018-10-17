@@ -81,9 +81,11 @@ class frm_Documento(Ui_Form, Generic_extra):
                     shelvFile['docTypes'] = self.lstDocTypes
                 shelvFile.close()
             except KeyError:
-                print("Porfavor carregue ou crie um ficheiro de configuracao")
+                msg.error("Configuracao de fichero", "Pro favor carregue ou cire um ficheiro de configuracao")
+
         else:
-            print("A janela sera fechada. Porfavor carregue ou crie um ficheiro de configuracao")
+            msg.aviso("A janela sera fechada. Porfavor carregue ou crie um ficheiro de configuracao")
+
             self.close()
             
             
