@@ -13,7 +13,7 @@ import SettingsForm
 from ui_Main import Ui_MainWindow
 from PyQt5.Qt import QMainWindow, QStandardItemModel, QPushButton
 import CloudStorage
-from PyQt5.QtWidgets import QTreeWidget, QAbstractItemView, QTableWidget
+from PyQt5.QtWidgets import QTreeWidget, QAbstractItemView, QTableWidget, QHeaderView
 import time
 from ExtraExtra import Generic_extra
 from CloudStorage import setConnectionToCloud
@@ -30,6 +30,7 @@ class frm_Main(Ui_MainWindow, QMainWindow):
         self.oldLst = None;
         
         self.setCon()
+        self.configTable()
         self.setUpIcons()
         self.clearTempFiles()
         self.selectionBehavior()
@@ -38,9 +39,21 @@ class frm_Main(Ui_MainWindow, QMainWindow):
         self.bucket = None
         self.PBAdicionar.clicked.connect(self.onAddClicked)
         self.PBRemover.clicked.connect(self.deleteFile)
+        self.PBOpen.clicked.connect(self.open)
         self.blob = None
         
-        
+    def open(self):
+        pass
+
+
+    def configTable(self):
+        self.TVFiles.horizontalHeader().setStretchLastSection(True)
+        self.TVFiles.setColumnWidth(1, 90)
+        self.TVFiles.horizontalHeader().setSectionResizeMode(1)
+        self.TVFiles.setEditTriggers(QAbstractItemView.NoEditTriggers)
+
+
+
     def clearTempFiles(self):
         try:
             send2trash.send2trash('temp_files')
