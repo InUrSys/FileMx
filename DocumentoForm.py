@@ -65,6 +65,7 @@ class frm_Documento(Ui_Form, Generic_extra):
         self.CBType.clear()
         self.setLstDocType()
         self.setCombox()
+        self.extra.uploadMainConfig(jsonFile=self.jsonFile, bucketName=self.bucketName)
     
     
     def setLstDocType(self):
@@ -85,7 +86,6 @@ class frm_Documento(Ui_Form, Generic_extra):
 
         else:
             msg.aviso("A janela sera fechada. Porfavor carregue ou crie um ficheiro de configuracao")
-
             self.close()
             
             

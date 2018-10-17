@@ -7,6 +7,8 @@ Created on Oct 15, 2018
 import os
 
 from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.uic.properties import QtGui, QtWidgets
+
 import QT_msg as msg
 
 import SettingsForm
@@ -40,16 +42,19 @@ class frm_Main(Ui_MainWindow, QMainWindow):
         self.PBAdicionar.clicked.connect(self.onAddClicked)
         self.PBRemover.clicked.connect(self.deleteFile)
         self.PBOpen.clicked.connect(self.open)
+        self.PBFechar.clicked.connect(self.close)
         self.blob = None
-        
+
     def open(self):
         pass
 
 
     def configTable(self):
+        #Elementos da tabela serao todos visiveis. Os headers sao dimensionados automaticamente de modo que seus elementos sejam
+        #visiveis
         self.TVFiles.horizontalHeader().setStretchLastSection(True)
-        self.TVFiles.setColumnWidth(1, 90)
-        self.TVFiles.horizontalHeader().setSectionResizeMode(1)
+        header = self.TVFiles.horizontalHeader()
+        header.setSectionResizeMode(QHeaderView.ResizeToContents)
         self.TVFiles.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
 

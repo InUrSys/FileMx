@@ -26,10 +26,24 @@ class SetCategorias_Form(QDialog, Ui_Form):
         self.lstDocTypes = [] 
         self.setLstDocType()
         self.setCombox()
-        
+
         self.PBAdd.clicked.connect(self.adicionarCategoria)
         self.PBRemove.clicked.connect(self.removeItem)
-        self.PBClose.clicked.connect(self.close)
+        self.PBClose.clicked.connect(self.closeWindow)
+
+
+    def saveValues(self):
+        #Salavando no Shelve
+        shelveFile = shelve.open('mainConfig')
+        shelveFile['docTypes'] = self.lstDocTypes
+        shelveFile.close()
+
+
+    def closeWindow(self):
+        #Fazer o update dos valores escolhidos para serem removidos
+        self.saveValues()
+        self.close()
+
 
     
     def setUpIcons(self):
@@ -48,10 +62,16 @@ class SetCategorias_Form(QDialog, Ui_Form):
             #Deve-se verificar se essa categoria existe na base de dados
             isIn = self.checkIfExits(new_category)
             if not isIn:
-                QT_msg.aviso("Categoria <b> "+ new_category +"</b> ja existente na base de dados.")
+                QT_msg.aviso("Categoria <b> "+ new_category +"</b> ja existente.")
             else:
-                self.insertCategory(new_category)
+                #Adicionar o novo Elemento
+                self.lstDocTypes.append(new_category)
+                QT_msg.Sucessos("Categoria Adicionada")
+                self.setCombox()
                 self.LEAdd.clear()
+                ## Adicionar
+                # self.insertCategory(new_category)
+                # self.LEAdd.clear()
         else:
             QT_msg.aviso("Insira nova categoria antes de Guardar")
     
@@ -83,7 +103,7 @@ class SetCategorias_Form(QDialog, Ui_Form):
 
     def setCombox(self):
         self.CBRemove.clear()
-        self.CBRemove.addItems(self.lstDocTypes)
+        self.CBRemove.addItems(['---Selecione o Tipo de Doc. ----'] + self.lstDocTypes)
         
     def setLstDocType(self):
         if Generic_extra().checkMainConfig():
@@ -108,15 +128,20 @@ class SetCategorias_Form(QDialog, Ui_Form):
 
     
     def removeItem(self):
-        if self.CBRemove.currentIndex() != 0:
-            table_name = "doctype"
-            cond = "nome"
-            cond_val = self.CBRemove.currentText()
-            cond_quote = True
-            done = FuncSQL.deleteVal(tblName=table_name, cond=cond, conVal= cond_val, condQuot=cond_quote)
-            if done:
-                self.setCombox()
-                Generic_extra().uploadMainConfig(self.jsonFile, self.bucketName)
+        index = self.CBRemove.currentIndex()
+        if index != 0:
+            to_Remove = self.CBRemove.currentText()
+            self.lstDocTypes.remove(to_Remove)
+            self.CBRemove.removeItem(index)
+
+            # table_name = "doctype"
+            # cond = "nome"
+            # cond_val = self.CBRemove.currentText()
+            # cond_quote = True
+            # done = FuncSQL.deleteVal(tblName=table_name, cond=cond, conVal= cond_val, condQuot=cond_quote)
+            # if done:
+            #     self.setCombox()
+            #     Generic_extra().uploadMainConfig(self.jsonFile, self.bucketName)
     
             
             

@@ -2,6 +2,7 @@
 Created on Oct 16, 2018
 
 @author: chernomirdinmacuvele
+@colaborator: felicianoMazoio
 '''
 import shelve
 
@@ -20,9 +21,51 @@ class Settings_Frm(QDialog, Ui_Form):
         self.setupUi(self)
 
         self.shelvpaht = None;
+        self.populateAreas()
         self.TBPathJson.clicked.connect(self.selectJsonFile)
         self.TBPath.clicked.connect(self.openTreeModel)
         self.PBGuardar.clicked.connect(self.save)
+        self.PBFechar.clicked.connect(self.close)
+
+    def populateAreas(self):
+        shelveFile = shelve.open("mainConfig")
+        jsonPath = shelveFile['jsonPath']
+        bucketName = shelveFile['companyName']
+        mainConfigPath = os.path.abspath('mainConfig')
+
+        #Variaveis que vao controlar a exitencia do path de cada ficherio
+        """
+            Why you ask
+            Imaginemos que (devemos pensar em todos os casos) o File Mx nao baixe os ficheiros da cloud mas no directorio do File_Mx EE exista um ficheiro .dat (nao .dir, .ba,, .db)
+            Tenho de verificar se pelomenos um destes ficheiros existem para colocar  LineEdit do path, dai que temos de verifica-los percorrendo a lista das extensoes ate ao ultimo 
+            elemento e se nem o ultimo elemento existe, significa que nao temos nenhum ficheiro mainConfig
+        """
+        ext = ['.dir', '.bak', '.db', '.dat']
+        exists = True
+        size = 0
+
+        for extension in ext:
+            full_path = mainConfigPath + extension
+            #Se pelomenos um existir, ele sai do loop
+            if not os.path.exists(full_path):
+                size += 1
+            else:
+                break
+
+            if size == len(ext):
+                exists = False
+
+
+        if not exists:
+            msg.error("Ficheiro de configuracoes nao existente!")
+        else:
+            self.LEPath.setText(mainConfigPath)
+
+        self.LECompany.setText(bucketName)
+        self.LEPathJson.setText(jsonPath)
+
+        shelveFile.close()
+        print("working")
 
 
     def openTreeModel(self):
@@ -60,7 +103,8 @@ class Settings_Frm(QDialog, Ui_Form):
             shelveFiel['jsonPath'] = jsonFile
             shelveFiel['companyName'] = empresa
             shelveFiel.close()
-            Generic_extra.uploadMainConfig()
+            generic_extra = Generic_extra()
+            generic_extra.uploadMainConfig(jsonFile=jsonFile, bucketName=empresa)
             msg.Sucessos("Configuracoes guardadas!")
         else:
             #ficherio nao valido nao salvar e mostrar msg de erro
