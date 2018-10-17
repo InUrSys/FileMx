@@ -20,7 +20,11 @@ class Settings_Frm(QDialog, Ui_Form):
         self.shelvpaht = None;
         self.TBPathJson.clicked.connect(self.selectJsonFile)
         self.TBPath.clicked.connect(self.openTreeModel)
+<<<<<<< HEAD
+        self.PBGuardar.clicked.connect()
+=======
         self.PBGuardar.clicked.connect(self.save)
+>>>>>>> 4920bbc8ba0ebaa914c31f7904d2c7cdf79cda7b
 
 
     def openTreeModel(self):

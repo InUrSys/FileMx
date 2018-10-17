@@ -33,69 +33,59 @@ class frm_Documento(Ui_Form, Generic_extra):
         
         self.jsonFile = jsonFile
         self.bucketName = bucketName
-        #self.dbcon=dbcon
-
         self.extra = Generic_extra()
-        #self.setUpComboBox()
-
 
         self.shelvePath = None
         self.lstImg = []
         self.lstPdf = []
-        
+        self.lstDocTypes = []
         self.dictMetaData={}
         self.clkFilePath=None
+        
         #self.configCbModel()
+        self.setLstDocType()
         self.setUpIcons()
+        
         self.PBAdd.clicked.connect(self.addFilesToLst) #working 100%
         self.PBRemove.clicked.connect(self.removeFileFromLst) #working 100%
         self.LWPaths.clicked.connect(self.clickedItem) #working 100%
         self.LWPaths.doubleClicked.connect(self.DoubleclickedItem) #working 100%
         self.PBSave.clicked.connect(self.start_Save)
         self.PBClose.clicked.connect(self.ToClosed) #working 100%
-       
-
-#===============================================================================
-#     def getShelvePath(self):
-#         self.shelvePath = os.path.abspath("F:\Programas\MyProjects\Python_Projects\File_Mx_EE\mainConfig")
-# 
-# 
-#     def setUpComboBox(self):
-#         self.getShelvePath()
-#         path = self.shelvePath
-#         shelvFile = shelve.open(path);
-#         folders = shelvFile['mainDict']
-#         self.extractToWrite(folder = folders)
-# 
-#         docTypes = shelvFile.get('docTypes', False)
-# 
-#         if not docTypes:
-#             doc_types = ['Factura', 'Recibo', 'Curriculum Vitae', 'Certificado', 'Imagens', 'Outros']
-#             shelvFile['docTypes'] = doc_types
-# 
-#         self.CBType.addItems(docTypes)
-# 
-#         shelvFile.close()
-#         
-# 
-#     def extractToWrite(self, folder = None):
-#         #Gets all the writable folders
-#         folders_to_write = []
-#         values = list(folder.values())#Extracts all the values inside the mainDict in the shelveFile and gets Tupls (path, boolean)
-#         for val in values:
-#             if val[1]: #Checks the boolean to see if it is writable
-#                 folders_to_write.append(val[0])
-# 
-#         folders_to_write = self.filterPahts(folders_to_write) #Filters the folder path to get only its name.
-#         self.CBToStore.addItems(folders_to_write)
-# 
-#     def filterPahts(self, collection = None):
-#         filtered = []
-#         for val in collection:
-#             filtered.append(os.path.basename(val))
-# 
-#         return filtered
-#===============================================================================
+ 
+ 
+    def setLstDocType(self):
+        shelvePath = "mainConfig"
+        shelvFile = shelve.open(shelvePath);
+        try:
+            shelvFile['mainDict']
+            try:
+                self.lstDocTypes = shelvFile['docTypes']
+            except KeyError:
+                self.lstDocTypes = ['Factura', 'Recibo', 'Curriculum Vitae', 'Certificado']
+            shelvFile.close()
+        except KeyError:
+            print("Porfavor carregue ou crie um ficheiro de configuracao")
+         
+    def 
+ 
+    def extractToWrite(self, folder = None):
+        #Gets all the writable folders
+        folders_to_write = []
+        values = list(folder.values())#Extracts all the values inside the mainDict in the shelveFile and gets Tupls (path, boolean)
+        for val in values:
+            if val[1]: #Checks the boolean to see if it is writable
+                folders_to_write.append(val[0])
+ 
+        folders_to_write = self.filterPahts(folders_to_write) #Filters the folder path to get only its name.
+        self.CBToStore.addItems(folders_to_write)
+ 
+    def filterPahts(self, collection = None):
+        filtered = []
+        for val in collection:
+            filtered.append(os.path.basename(val))
+ 
+        return filtered
 
 
     def ToClosed(self):
