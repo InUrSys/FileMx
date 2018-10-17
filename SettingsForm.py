@@ -12,6 +12,8 @@ from PyQt5.Qt import QDialog, QFileDialog, QLineEdit
 import os
 import shutil
 import CloudStorage
+from shutil import SameFileError
+from ExtraExtra import Generic_extra
 class Settings_Frm(QDialog, Ui_Form):
     def __init__(self):
         super().__init__()
@@ -20,11 +22,7 @@ class Settings_Frm(QDialog, Ui_Form):
         self.shelvpaht = None;
         self.TBPathJson.clicked.connect(self.selectJsonFile)
         self.TBPath.clicked.connect(self.openTreeModel)
-<<<<<<< HEAD
-        self.PBGuardar.clicked.connect()
-=======
         self.PBGuardar.clicked.connect(self.save)
->>>>>>> 4920bbc8ba0ebaa914c31f7904d2c7cdf79cda7b
 
 
     def openTreeModel(self):
@@ -36,11 +34,16 @@ class Settings_Frm(QDialog, Ui_Form):
         else:
             self.LEPath.setText(self.shelvpaht)
 
+
     def selectJsonFile(self):
         jsonFile, _ = QFileDialog().getOpenFileName(self, "Select File", "","Json File(*.json)")
         curDir = os.getcwd()
         if jsonFile != '':
-            newPath = shutil.copy(jsonFile, curDir)
+            try:
+                newPath = shutil.copy(jsonFile, curDir)
+            except SameFileError:
+                _, file = os.path.split(jsonFile)
+                newPath = os.path.join(curDir,file)
             self.LEPathJson.setText(newPath)
     
     
@@ -53,14 +56,15 @@ class Settings_Frm(QDialog, Ui_Form):
             #Ficheiro valido salvar
             #fechar
             #Criar um ficherio shelve para armazenar os Dados de todos os campos
-            shelveFiel = shelve.open("settings")
-            shelve['jsonPath'] = jsonFile
-            shelve['companyName'] = empresa
-            shelve.close()
+            shelveFiel = shelve.open("mainConfig")
+            shelveFiel['jsonPath'] = jsonFile
+            shelveFiel['companyName'] = empresa
+            shelveFiel.close()
+            Generic_extra.uploadMainConfig()
             msg.Sucessos("Configuracoes guardadas!")
         else:
             #ficherio nao valido nao salvar e mostrar msg de erro
-            msg.error("Ficheiro Invalido", "Ficheiro nao valido para salvar. Defina bem o nome da empresa")
+            msg.error("<b>Ficheiro Invalido</b>.<p>Ficheiro nao valido para salvar. Acrescente o nome da empresa</p>")
             #nao fechar
 
     #save in a shelvewhere the app resides

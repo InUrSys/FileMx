@@ -69,29 +69,22 @@ class frm_Main(Ui_MainWindow, QMainWindow):
         msg.Sucessos("Item removido")
 
         
-        
     def selectionBehavior(self):
         self.TVFiles.setSelectionBehavior(QAbstractItemView.SelectRows)
     
     
     def setCon(self):
+        
         self.jsonFile = 'File Mx EE-de38156917d4.json'
         self.NomeBalde = '1_empresa'
+        Generic_extra().getMainConfig(self.jsonFile, self.NomeBalde)
         self.setCon = Thread_Google_Bucket(self.jsonFile, self.NomeBalde)
         self.setCon.bucket.connect(self.setBucket)
         self.setCon.start()
 
-
     def checkLists(self):
-        print("check")
         if str(self.lstOut) != str(self.oldLst):
-            self.PBRemover.setEnabled(False)
-            self.oldLst  = None
-            print("Different")
-
-        else:
-            print("Equal")
-
+            self.disableButton()
         self.oldLst = self.lstOut
         
     def setBucket(self, bucket):

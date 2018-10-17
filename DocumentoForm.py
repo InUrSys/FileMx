@@ -9,7 +9,6 @@ import shelve
 import QT_msg as msg
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtWidgets import QListWidgetItem
-from frm_settings import frm_setting_categoria as settings
 import sqlMagic
 import mixedModel
 import QT_msg
@@ -18,12 +17,13 @@ from ui_Documento import Ui_Form
 import os
 import FuncSQL
 from datetime import datetime
-from PyQt5.Qt import QDateEdit, QComboBox
+from PyQt5.Qt import QDateEdit, QComboBox, QDate
 import MainForm
 import CloudStorage
 import shutil
 from Services import Thread_Google_Uploader
 import send2trash
+from SetCategoriaForm import SetCategorias_Form
 
 class frm_Documento(Ui_Form, Generic_extra):
     def __init__(self, jsonFile=None, bucketName=None):
@@ -39,12 +39,15 @@ class frm_Documento(Ui_Form, Generic_extra):
         self.lstImg = []
         self.lstPdf = []
         self.lstDocTypes = []
+        self.lstPathFiles = []
         self.dictMetaData={}
         self.clkFilePath=None
         
         #self.configCbModel()
         self.setLstDocType()
         self.setUpIcons()
+        self.setLstPaths()
+        self.setCombox()
         
         self.PBAdd.clicked.connect(self.addFilesToLst) #working 100%
         self.PBRemove.clicked.connect(self.removeFileFromLst) #working 100%
@@ -52,22 +55,64 @@ class frm_Documento(Ui_Form, Generic_extra):
         self.LWPaths.doubleClicked.connect(self.DoubleclickedItem) #working 100%
         self.PBSave.clicked.connect(self.start_Save)
         self.PBClose.clicked.connect(self.ToClosed) #working 100%
- 
- 
+        self.DEData.setDate(QDate.currentDate())
+        self.settingsButton.clicked.connect(self.onSettingsClicekd)
+    
+    
+    def onSettingsClicekd(self):
+        frm = SetCategorias_Form(self.jsonFile, self.bucketName)
+        frm.exec_()
+        self.CBType.clear()
+        self.setLstDocType()
+        self.setCombox()
+    
+    
     def setLstDocType(self):
-        shelvePath = "mainConfig"
-        shelvFile = shelve.open(shelvePath);
-        try:
-            shelvFile['mainDict']
+        if self.checkMainConfig():
+            shelvePath = "mainConfig"
+            shelvFile = shelve.open(shelvePath);
             try:
-                self.lstDocTypes = shelvFile['docTypes']
+                shelvFile['mainDict']
+                try:
+                    self.lstDocTypes = shelvFile['docTypes']
+                    
+                except KeyError:
+                    self.lstDocTypes = ['--Selecione o Tipo de Doc.--','Factura', 'Recibo', 'Curriculum Vitae', 'Certificado']
+                    shelvFile['docTypes'] = self.lstDocTypes
+                shelvFile.close()
             except KeyError:
-                self.lstDocTypes = ['Factura', 'Recibo', 'Curriculum Vitae', 'Certificado']
-            shelvFile.close()
-        except KeyError:
-            print("Porfavor carregue ou crie um ficheiro de configuracao")
-         
-    def 
+                print("Porfavor carregue ou crie um ficheiro de configuracao")
+        else:
+            print("A janela sera fechada. Porfavor carregue ou crie um ficheiro de configuracao")
+            self.close()
+            
+            
+    def setLstPaths(self):
+        if self.checkMainConfig():
+            shelvePath = "mainConfig"
+            shelvFile = shelve.open(shelvePath);
+            try:
+                dictFound = shelvFile['mainDict']
+                lstPath = []
+                lstKeys = dictFound.keys()
+                for key in lstKeys:
+                    path, toSave = dictFound[key]
+                    if toSave:
+                        lstPath.append(path)
+                
+                self.lstPathFiles = self.filterPath(lstPath)
+            except KeyError:
+                print("Ficherio mal configurar. A janela sera fechada.")
+                self.close()
+        else:
+            print("A janela sera fechada. Porfavor carregue ou crie um ficheiro de configuracao")
+            self.close()
+    
+    
+    def setCombox(self):
+        self.CBType.addItems(self.lstDocTypes)
+        self.CBToStore.addItems(self.lstPathFiles)
+ 
  
     def extractToWrite(self, folder = None):
         #Gets all the writable folders
@@ -84,7 +129,6 @@ class frm_Documento(Ui_Form, Generic_extra):
         filtered = []
         for val in collection:
             filtered.append(os.path.basename(val))
- 
         return filtered
 
 
@@ -95,19 +139,10 @@ class frm_Documento(Ui_Form, Generic_extra):
 
     def setUpIcons(self):
         self.settingsButton.setIcon(QIcon(QPixmap(os.path.join(os.getcwd(),"res","settings.png"))))
-        
-
-    def goToSettings(self):
-        self.settings_window = settings(self.dbcon);
-        self.settings_window.exec()
-        if self.settings_window.close():
-            self.updateCbModel()
-
+    
 
     def start_Save(self):
-        self.CBType.addItems(["Factura"])
-        self.CBToStore.addItems(["/Users/chernomirdinmacuvele/File Mx/BIM/RH/Steban"])
-
+        
         pdfObj = self.FusionImg(lstImgFile=self.lstImg) #working 100$
         if pdfObj is not None:
             for pdf_obj in pdfObj:
