@@ -59,7 +59,7 @@ class BuildTree(QDialog, Ui_Dialog):
     def chooseFolder(self):
         BuildTree.shelvPath = None;
 
-        shelv_path, _ = QFileDialog().getOpenFileName(self, "Select File", "","shelve(*.db, *.dat, *.bak)")
+        shelv_path, _ = QFileDialog().getOpenFileName(self, "Select File", "","shelve(*.db *.dat *.bak)")
         if shelv_path != '':
             self.shelvPath = shelv_path.split(".")[0]
             self.setTreeModule()

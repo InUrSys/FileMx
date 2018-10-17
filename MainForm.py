@@ -96,10 +96,12 @@ class frm_Main(Ui_MainWindow, QMainWindow):
         self.setCon.bucket.connect(self.setBucket)
         self.setCon.start()
 
+
     def checkLists(self):
         if str(self.lstOut) != str(self.oldLst):
             self.disableButton()
         self.oldLst = self.lstOut
+
         
     def setBucket(self, bucket):
         self.bucket = bucket
