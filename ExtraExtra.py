@@ -21,15 +21,68 @@ import QT_msg
 import mixedModel
 import shelve
 import google.cloud.storage.blob as g
+import CloudStorage
+from Services import Thread_Google_Uploader
 
 class Generic_extra(QDialog):
+    
+    def uploadMainConfig(self, jsonFile, bucketName):
+        bucket = CloudStorage.setConnectionToCloud(jsonFile, bucketName)
+        fileName = "mainConfig"
+        extLst = ['.dir', '.bak', '.db', '.dat']
+        for ext in extLst:
+            cFile = fileName+ext
+            if os.path.exists(cFile):
+                fileToUpload = cFile
+                break
+        blob = bucket.blob(fileToUpload)
+        if blob != None:
+            blob.upload_from_filename(fileToUpload)
+    
+    
+    def getMainConfig(self, jsonFile, bucketName):
+        bucket = CloudStorage.setConnectionToCloud(jsonFile, bucketName)
+        lstBuckets = bucket.list_blobs()
+        extLst = ['mainConfig.dir', 'mainConfig.bak', 'mainConfig.db', 'mainConfig.dat']
+        for blob in lstBuckets:
+            nome = blob.name
+            for ext in extLst:
+                if nome == ext:
+                    blob.download_to_filename(nome)
+                    break
+                
+        #blob = CloudStorage.setBlobToGet(fileName, bucket, jsonFile, NomeBalde)
+        
+        
+        
+    
+    def filterPath(self, lstIn):
+        lstOut =[]
+        mainPath = os.path.expanduser(os.path.join('~','File Mx'))
+        for path in lstIn:
+            _, pathNeeded = path.split('File Mx')
+            newPath = mainPath+pathNeeded
+            if os.path.exists(newPath):
+                lstOut.append(newPath)
+        return lstOut
+        
+    
+    
+    def checkMainConfig(self):
+        fileName = "mainConfig"
+        extLst = ['.dir', '.bak', '.db', '.dat']
+        for ext in extLst:
+            cFile = fileName+ext
+            if os.path.exists(cFile):
+                return True
+        return False
+    
     
     def makeModel(self, tbView, mtxIn):
         tbView.setRowCount(len(mtxIn))
         tbView.setColumnCount(len(mtxIn[0]))
         for i, row in enumerate(mtxIn):
             for j, val in enumerate(row):
-                
                 if type(val) == QDate:
                     val = val.toPyDate().isoformat()
                 elif type(val) == QTime:
@@ -150,11 +203,8 @@ class Generic_extra(QDialog):
                     else:
                         info = self.PTEInfo.toPlainText()
                     
-                    #Get last Method
-                    cod = 1
                     
                     dictIn= {
-                            'cod':str(cod),
                             'doc_num':str(idx+1)+" Of "+str(len(lstPdfIn)),
                             'nome':file_name,
                             'data':datetime.today().date().isoformat(),
@@ -167,7 +217,7 @@ class Generic_extra(QDialog):
                             }
                     
                     trailer = PdfReader(pdf) #Open the pdf FIle
-                    metadata = PdfDict(cod = dictIn['cod'],doc_num = dictIn['doc_num'], nome = dictIn['nome'], data = dictIn['data'], 
+                    metadata = PdfDict(doc_num = dictIn['doc_num'], nome = dictIn['nome'], data = dictIn['data'], 
                                        horas = dictIn['horas'], treePath=dictIn['treePath'], doc_type = dictIn['doc_type'], info = dictIn['info'], 
                                        systemEncoding = dictIn['systemEncoding'], os = dictIn['os'], numero = idx)#Dict where we gointo insert our metadata
                     trailer.Info.clear() #we clear the default data that the lib adds

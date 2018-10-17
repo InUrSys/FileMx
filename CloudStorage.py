@@ -15,8 +15,8 @@ import send2trash
 import QT_msg as msg
 #Create sotrage client
 #connectar google cloud Storage
-jsonFile = '/Users/chernomirdinmacuvele/Documents/workspace/File_MX_EE/File Mx EE-de38156917d4.json'
-NomeBalde = '1_empresa'
+#jsonFile = '/Users/chernomirdinmacuvele/Documents/workspace/File_MX_EE/File Mx EE-de38156917d4.json'
+#NomeBalde = '1_empresa'
 
 def setConnectionToCloud(jsonFile, NomeBalde):
     try:
@@ -61,8 +61,10 @@ def getListItem(bucket=None, jsonFile=None, NomeBalde=None):
         lst=[]
         for blob in lst_blobs:
             nome = blob.name
-            typeDoc, dateOut, timeOut = makeItReadeble(nome)
-            lst.append((blob, typeDoc, dateOut, timeOut))
+            extLst = ['mainConfig.dir', 'mainConfig.bak', 'mainConfig.db', 'mainConfig.dat']
+            if nome not in extLst:
+                typeDoc, dateOut, timeOut = makeItReadeble(nome)
+                lst.append((blob, typeDoc, dateOut, timeOut))
         return lst
     
     
