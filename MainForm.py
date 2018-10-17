@@ -46,6 +46,7 @@ class frm_Main(Ui_MainWindow, QMainWindow):
             send2trash.send2trash('temp_files')
         except OSError:
             pass
+        
 
     def disableButton(self):
         self.blob = None
@@ -92,6 +93,7 @@ class frm_Main(Ui_MainWindow, QMainWindow):
         self.lstOut = CloudStorage.getListItem(bucket=self.bucket)
         self.checkLists()
         self.setViewer()
+        
     
     def setViewer(self):
         if self.lstOut != None:

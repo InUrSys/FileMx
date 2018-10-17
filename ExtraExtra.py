@@ -91,7 +91,7 @@ class Generic_extra(QDialog):
                     val = val.name
                 item = QTableWidgetItem(str(val))
                 tbView.setItem(i,j, item)
-            
+        self.setMainTableHeader(self, tbView)
     
     #on click get the path where the file is (IMG)
     def getFile(self):
@@ -292,8 +292,12 @@ class Generic_extra(QDialog):
 
         return grand_grand_child
 
-
-
+    def setMainTableHeader(self, tableWidget):
+        headerList = ['Ficheiro', 'Tipo de Documento', 'Data', 'Hora']
+        for i, txt in enumerate(headerList):
+            tableWidget.setHorizontalHeaderItem(i,QTableWidgetItem(txt))
+            
+            
     def create_month_dict(self):
         self.month_string = {
             '1': "Jan",
