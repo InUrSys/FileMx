@@ -28,10 +28,12 @@ class Settings_Frm(QDialog, Ui_Form):
         self.PBFechar.clicked.connect(self.close)
 
     def populateAreas(self):
+
         shelveFile = shelve.open("mainConfig")
         jsonPath = shelveFile['jsonPath']
         bucketName = shelveFile['companyName']
         mainConfigPath = os.path.abspath('mainConfig')
+
 
         #Variaveis que vao controlar a exitencia do path de cada ficherio
         """

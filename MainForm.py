@@ -79,6 +79,7 @@ class frm_Main(Ui_MainWindow, QMainWindow):
         self.PBOpen_2.setIcon(QIcon(QPixmap(os.path.join("res","download.png"))))
 
     def openConfig(self):
+
         frm = SettingsForm.Settings_Frm()
         frm.exec_()
         self.disableButton()

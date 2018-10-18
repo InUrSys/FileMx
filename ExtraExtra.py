@@ -29,15 +29,14 @@ class Generic_extra(QDialog):
     def uploadMainConfig(self, jsonFile, bucketName):
         bucket = CloudStorage.setConnectionToCloud(jsonFile, bucketName)
         fileName = "mainConfig"
-        extLst = ['.dir', '.bak', '.db', '.dat']
+        extLst = ['.dat', '.bak', '.dir', '.db', ]
         for ext in extLst:
             cFile = fileName+ext
             if os.path.exists(cFile):
                 fileToUpload = cFile
-                break
-        blob = bucket.blob(fileToUpload)
-        if blob != None:
-            blob.upload_from_filename(fileToUpload)
+                blob = bucket.blob(fileToUpload)
+                if blob != None:
+                    blob.upload_from_filename(fileToUpload)
     
     
     def getMainConfig(self, jsonFile, bucketName):
@@ -51,7 +50,7 @@ class Generic_extra(QDialog):
                     blob.download_to_filename(nome)
                     break
                 
-        #blob = CloudStorage.setBlobToGet(fileName, bucket, jsonFile, NomeBalde)
+        # blob = CloudStorage.setBlobToGet(fileName, bucket, jsonFile, NomeBalde)
         
         
         
